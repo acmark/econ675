@@ -55,6 +55,9 @@ local d = 5
 local n = 500
 
 mata:
+void polyloop() {
+
+
 X 	= uniform(`n',`d'):*2 :-1
 ep	= invnormal(uniform(`n',1)):*0.3637899:*(1 :+ rowsum(X:^2)) 
 gx	= exp(rowsum(X:^2))
@@ -73,15 +76,16 @@ X7 	= X:^7
 X8 	= X:^8
 X9 	= X:^9
 X10 = X:^10
+
 X1k = X#X
 X2k = X2#X2
 X3k = X3#X3
 X4k = X4#X4
+
 X1k = X1k[1::`n',2::5], X1k[1::`n', 8::10], X1k[1::`n',14::15], X1k[1::`n', 20]
 X2k = X2k[1::`n',2::5], X2k[1::`n', 8::10], X2k[1::`n',14::15], X2k[1::`n', 20]
 X3k = X3k[1::`n',2::5], X3k[1::`n', 8::10], X3k[1::`n',14::15], X3k[1::`n', 20]
 X4k = X4k[1::`n',2::5], X4k[1::`n', 8::10], X4k[1::`n',14::15], X4k[1::`n', 20]
-
 
 
 asarray(A,1,X)
@@ -100,23 +104,27 @@ asarray(A,13,(asarray(A,12),X9))
 asarray(A,14,(asarray(A,13),X10))
 
 
-Z = qrsolve(cons,(T,asarray(A,1)))
+theta_hat = I(1,14):*0
+se_hat = I(1,14):*0
+k_hat = I(1,14):*0
+
+for (j=1; j<=14; j++) {
+
+Z = qrsolve(cons,(T,asarray(A,j)))
 ZZ  = Z*Z'
 Yhat = ZZ*Y
 W = diag(ZZ)
-lolk = mean((Y-Yhat)/(1-W)^2)
-
-
-ZQ = (cons,asarray(A,1))*invsym((cons,asarray(A,1))'*(cons,asarray(A,1)))*(cons,asarray(A,1))'
-
+ZQ = (cons,asarray(A,j))*invsym((cons,asarray(A,j))'*(cons,asarray(A,j)))*(cons,asarray(A,j))'
 M = I(`n') - ZQ
 YM = M*Y
 TM = M*T
-theta_hat = (TM'*YM) / (TM'*TM)
-sigma = diag((YM - TM*theta_hat)'*(YM - TM*theta_hat))
-se_hat = sqrt(TM'*sigma*TM / (TM'*TM))
-
-
+theta_hat[1,j] = (TM'*YM) / (TM'*TM)
+sigma = diag(ZQ*(Y-T*theta_hat[1,j]))
+se_hat[1,j] = sqrt(invsym(T'*ZQ*T)*(T'*ZQ*sigma*ZQ*T)*invsym(T'*ZQ*T))
+}
+se_hat
+theta_hat
+}
 end
 
 /*
