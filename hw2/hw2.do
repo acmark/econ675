@@ -48,14 +48,22 @@ timer list
 *******
 *** Problem 3
 *******
-set obs 500
+/*
 drop _all
+set obs 1000
 local theta = 1 
 local d = 5
 local n = 500
 
+forvalues p = 1/14 { 
+gen se_hat`p' = .
+gen theta_hat`p' = .
+
+}
+
+
 mata:
-function polyloop() {
+void polyloop(i) {
 real matrix se_hat
 real matrix theta_hat
 
@@ -122,39 +130,28 @@ TM = M*T
 theta_hat[1,j] = (TM'*YM) / (TM'*TM)
 sigma = diag(ZQ*(Y-T*theta_hat[1,j]))
 se_hat[1,j] = sqrt(invsym(T'*ZQ*T)*(T'*ZQ*sigma*ZQ*T)*invsym(T'*ZQ*T))
-}
-	st_matrix("r(se_hat)", se_hat)
-	st_matrix("r(theta_hat)", theta_hat)
-
-}
-	   end
-
-/*
-forv iter = 0/9{
-svmat X`iter', n(x`iter'_)
+st_store(i, "se_hat"+strofreal(j), se_hat[1,j])
+st_store(i, "theta_hat"+strofreal(j), theta_hat[1,j])
 }
 
-
-forv iter = 1/4{
-svmat X`iter'k, n(xk`iter')
 }
+ end
 
-svmat ep, n(ep)
-svmat gx, n(gx)
-svmat T, n(T)
-svmat Y, n(Y)
-g cons = 1 //only for npseries
-
-local poly = "cons x1_* x2_* xk1* x3_* xk2* x4_* x3k* x5_* xk4* x6_* x7_* x8_* x9_* x10_*"
-forv iter = 1/14{
-local wc = 5 + 5*`iter'
-local varlist = substr("`poly'",1,`wc')
-di "`varlist'"
-semipar Y1 T1, nonpar(`varlist') 
-
-
+ 
+forvalues i = 1/1000 {
+mata polyloop(`i')
 }
+save output_q3.dta, replace
 
-di "`poly'"
+*/
+
+use output_q3,clear
+gen obs = _n
+reshape long se_hat theta_hat, i(obs) j(k)
+collapse (mean) mean_se_hat= se_hat  mean_theta_hat=theta_hat (sd) sd_theta_hat = theta_hat, by(k) 
+gen mean_bias = mean_theta_hat  - 1
+
+log close
+translate $resdir\pset2_stata.smcl $resdir\pset2_stata.pdf, replace
 
 

@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/erinmarkiewitz/Dropbox/Phd_Coursework/Econ675/hw2\results\pset2_stata.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}11 Oct 2018, 11:50:24
+ {txt}opened on:  {res}11 Oct 2018, 14:26:11
 {txt}
 {com}. 
 . 
@@ -45,24 +45,22 @@
 . *******
 . *** Problem 3
 . *******
-. set obs 500
-{txt}{p}
-number of observations (_N)  was 0,
-now 500
-{p_end}
-
-{com}. drop _all
-{txt}
-{com}. local theta = 1 
-{txt}
-{com}. local d = 5
-{txt}
-{com}. local n = 500
-{txt}
-{com}. 
-. mata:
-{txt}{hline 49} mata (type {cmd:end} to exit) {hline}
-{com}: function polyloop() {c -(}
+. /*
+> drop _all
+> set obs 1000
+> local theta = 1 
+> local d = 5
+> local n = 500
+> 
+> forvalues p = 1/14 {c -(} 
+> gen se_hat`p' = .
+> gen theta_hat`p' = .
+> 
+> {c )-}
+> 
+> 
+> mata:
+> void polyloop(i) {c -(}
 > real matrix se_hat
 > real matrix theta_hat
 > 
@@ -129,60 +127,46 @@ now 500
 > theta_hat[1,j] = (TM'*YM) / (TM'*TM)
 > sigma = diag(ZQ*(Y-T*theta_hat[1,j]))
 > se_hat[1,j] = sqrt(invsym(T'*ZQ*T)*(T'*ZQ*sigma*ZQ*T)*invsym(T'*ZQ*T))
+> st_store(i, "se_hat"+strofreal(j), se_hat[1,j])
+> st_store(i, "theta_hat"+strofreal(j), theta_hat[1,j])
 > {c )-}
->         st_matrix("r(se_hat)", se_hat)
->         st_matrix("r(theta_hat)", theta_hat)
 > 
 > {c )-}
-{txt}note: variable k_hat set but not used
-note: variable Yhat set but not used
-note: variable W set but not used
+>  end
+> 
+>  
+> forvalues i = 1/1000 {c -(}
+> mata polyloop(`i')
+> {c )-}
+> save output_q3.dta, replace
+> 
+> */
+. 
+. use output_q3,clear
+{txt}
+{com}. gen obs = _n
+{txt}
+{com}. reshape long se_hat theta_hat, i(obs) j(k)
+{txt}(note: j = 1 2 3 4 5 6 7 8 9 10 11 12 13 14)
 
-{com}:            end
-{txt}{hline}
+Data{col 36}wide{col 43}->{col 48}long
+{hline 77}
+Number of obs.                 {res}    1000   {txt}->{res}   14000
+{txt}Number of variables            {res}      29   {txt}->{res}       4
+{txt}j variable (14 values)                    ->   {res}k
+{txt}xij variables:
+           {res}se_hat1 se_hat2 ... se_hat14   {txt}->   {res}se_hat
+  theta_hat1 theta_hat2 ... theta_hat14   {txt}->   {res}theta_hat
+{txt}{hline 77}
 
+{com}. collapse (mean) mean_se_hat= se_hat  mean_theta_hat=theta_hat (sd) sd_theta_hat = theta_hat, by(k) 
+{txt}
 {com}. 
-. /*
-> forv iter = 0/9{c -(}
-> svmat X`iter', n(x`iter'_)
-> {c )-}
-> 
-> 
-> forv iter = 1/4{c -(}
-> svmat X`iter'k, n(xk`iter')
-> {c )-}
-> 
-> svmat ep, n(ep)
-> svmat gx, n(gx)
-> svmat T, n(T)
-> svmat Y, n(Y)
-> g cons = 1 //only for npseries
-> 
-> local poly = "cons x1_* x2_* xk1* x3_* xk2* x4_* x3k* x5_* xk4* x6_* x7_* x8_* x9_* x10_*"
-> forv iter = 1/14{c -(}
-> local wc = 5 + 5*`iter'
-> local varlist = substr("`poly'",1,`wc')
-> di "`varlist'"
-> semipar Y1 T1, nonpar(`varlist') 
-> 
-> 
-> {c )-}
-> 
-> di "`poly'"
-> 
-> 
-
-{txt}end of do-file
-
-{com}. mata: polyloop()
-{res}
-{com}. ret li
-
-{txt}scalars:
-             r(k_drop) =  {res}0
-
-{txt}matrices:
-          r(theta_hat) : {res} 1 x 14
-             {txt}r(se_hat) : {res} 1 x 14
-
-{com}. 
+. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}/Users/erinmarkiewitz/Dropbox/Phd_Coursework/Econ675/hw2\results\pset2_stata.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}11 Oct 2018, 14:26:11
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
