@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/erinmarkiewitz/Dropbox/Phd_Coursework/Econ675/hw2\results\pset2_stata.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}11 Oct 2018, 14:37:58
+ {txt}opened on:  {res}11 Oct 2018, 16:21:16
 {txt}
 {com}. 
 . 
@@ -11,214 +11,578 @@
 . *** Problem 1 
 . *******
 . /*
-> set obs 10000
-> timer on 1
-> program IMSEsim, rclass
-> drop _all
-> set obs 1000
-> gen x =  rnormal(-1/4, 5/8)
-> gen fx = normalden(-1/4, 5/8)
-> _kdens x, at(x) generate(fxh) bw(.5) kernel(epan2)
-> gen diffLI = (fx - fxh)^2 
-> gen diffL0 = 0
+>    set obs 10000
+>    timer on 1
+>    program IMSEsim, rclass
+>    drop _all
+>    set obs 1000
+>    gen x =  rnormal(-1/4, 5/8)
+>    gen fx = normalden(-1/4, 5/8)
+>    _kdens x, at(x) generate(fxh) bw(.5) kernel(epan2)
+>    gen diffLI = (fx - fxh)^2 
+>    gen diffL0 = 0
 > 
 > 
-> forvalues i = 1/1000 {c -(}
->         _kdens x if _n != `i', at(x) generate(fxh`i') bw(.5) kernel(epan2) 
->         replace diffL0 = (fx - fxh`i')^2 if _n == `i'
-> {c )-}
+>    forvalues i = 1/1000 {c -(}
+>    _kdens x if _n != `i', at(x) generate(fxh`i') bw(.5) kernel(epan2) 
+>    replace diffL0 = (fx - fxh`i')^2 if _n == `i'
+>    {c )-}
 > 
-> qui summ diffLI
-> return scalar data1 = r(mean)
-> qui summ diffL0
-> return scalar data2 = r(mean)
-> end
+>    qui summ diffLI
+>    return scalar data1 = r(mean)
+>    qui summ diffL0
+>    return scalar data2 = r(mean)
+>    end
 > 
 > 
 > 
-> simulate IMSE_LI=r(data1) IMSE_L0 = r(data2), reps(1) nodots: IMSEsim
-> timer off 1
-> timer list
+>    simulate IMSE_LI=r(data1) IMSE_L0 = r(data2), reps(1) nodots: IMSEsim
+>    timer off 1
+>    timer list
 > */
 . 
 . 
-. *******
-. *** Problem 3
-. *******
+. **************
+. **** Problem 2 
+. **************
 . 
-. drop _all
-{txt}
-{com}. set obs 1000
+. **************
+. **** Problem 2a 
+. ***************
+. set obs 1000
 {txt}{p}
 number of observations (_N)  was 0,
 now 1,000
 {p_end}
 
-{com}. local theta = 1 
-{txt}
-{com}. local d = 5
-{txt}
-{com}. local n = 500
-{txt}
-{com}. 
-. forvalues p = 1/14 {c -(} 
-{txt}  2{com}. gen v_hat`p' = .
-{txt}  3{com}. gen theta_hat`p' = .
-{txt}  4{com}. 
-. {c )-}
-{txt}(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-(1,000 missing values generated)
-
 {com}. 
 . 
-. mata:
+. * Define cross validation function: CV(list, i): vars=variable list, i = max polynomial
+. mata
 {txt}{hline 49} mata (type {cmd:end} to exit) {hline}
-{com}: void polyloop(i) {c -(}
-> real matrix v_hat
-> real matrix theta_hat
-> 
-> X       = uniform(`n',`d'):*2 :-1
-> ep      = invnormal(uniform(`n',1)):*0.3637899:*(1 :+ rowsum(X:^2)) 
-> gx      = exp(rowsum(X:^2))
-> T       = invnormal(uniform(`n',1)) + rowsum(X:^2):^.5 :>= 0
-> Y   = T + gx + ep 
-> 
-> 
-> A = asarray_create("real",1)
-> cons= J(500,1,1)
-> X2      = X:^2
-> X3      = X:^3
-> X4      = X:^4
-> X5      = X:^5
-> X6      = X:^6
-> X7      = X:^7
-> X8      = X:^8
-> X9      = X:^9
-> X10 = X:^10
-> 
-> X1k = X#X
-> X2k = X2#X2
-> X3k = X3#X3
-> X4k = X4#X4
-> 
-> X1k = X1k[1::`n',2::5], X1k[1::`n', 8::10], X1k[1::`n',14::15], X1k[1::`n', 20]
-> X2k = X2k[1::`n',2::5], X2k[1::`n', 8::10], X2k[1::`n',14::15], X2k[1::`n', 20]
-> X3k = X3k[1::`n',2::5], X3k[1::`n', 8::10], X3k[1::`n',14::15], X3k[1::`n', 20]
-> X4k = X4k[1::`n',2::5], X4k[1::`n', 8::10], X4k[1::`n',14::15], X4k[1::`n', 20]
-> 
-> 
-> asarray(A,1,X)
-> asarray(A,2,(asarray(A,1),X2))
-> asarray(A,3,(asarray(A,2),X1k))
-> asarray(A,4,(asarray(A,3),X3))
-> asarray(A,5,(asarray(A,4),X2k))
-> asarray(A,6,(asarray(A,5),X4))
-> asarray(A,7,(asarray(A,6),X3k))
-> asarray(A,8,(asarray(A,7),X5))
-> asarray(A,9,(asarray(A,8),X4k))
-> asarray(A,10,(asarray(A,9),X6))
-> asarray(A,11,(asarray(A,10),X7))
-> asarray(A,12,(asarray(A,11),X8))
-> asarray(A,13,(asarray(A,12),X9))
-> asarray(A,14,(asarray(A,13),X10))
-> 
-> 
-> theta_hat = I(1,14):*0
-> v_hat = I(1,14):*0
-> k_hat = I(1,14):*0
-> 
-> for (j=1; j<=14; j++) {c -(}
-> 
-> Z = qrsolve(cons,(T,asarray(A,j)))
-> ZZ  = Z*Z'
-> Yhat = ZZ*Y
-> W = diag(ZZ)
-> ZQ = (cons,asarray(A,j))*invsym((cons,asarray(A,j))'*(cons,asarray(A,j)))*(cons,asarray(A,j))'
-> M = I(`n') - ZQ
-> YM = M*Y
-> TM = M*T
-> theta_hat[1,j] = (TM'*YM) / (TM'*TM)
-> sigma = diag(ZQ*(Y-T*theta_hat[1,j]))
-> v_hat[1,j] = invsym(T'*ZQ*T)*(T'*ZQ*sigma*ZQ*T)*invsym(T'*ZQ*T)
-> st_store(i, "v_hat"+strofreal(j), v_hat[1,j])
-> st_store(i, "theta_hat"+strofreal(j), theta_hat[1,j])
-> {c )-}
-> 
-> {c )-}
-{txt}note: variable k_hat set but not used
-note: variable Yhat set but not used
-note: variable W set but not used
+{com}:         void CV(vars, i) {c -(}
+>                 st_view(y=., ., "y")
+>                 st_view(X=., ., tokens(vars))
+>                 XpX  = cross(X, X)
+>                 XpXinv  = invsym(XpX)
+>                 b  = XpXinv*cross(X, y)
+>                 w = diagonal(X*XpXinv*X')
+>                 muhat = X*b
+>                 num = (y - muhat):*(y - muhat)
+>                 den= (J(1000,1,1) - w):*(J(1000,1,1) - w)
+>                 div = num:/den
+>                 CV = mean(div)
+>                 CV
+>                 st_numscalar("mCV"+strofreal(i), CV)
+>         {c )-}
 
-{com}:  end
+: end
 {txt}{hline}
 
 {com}. 
-.  
-. forvalues i = 1/10 {c -(}
-{txt}  2{com}. mata polyloop(`i')
-{txt}  3{com}. {c )-}
-{res}{txt}
-{com}. save output_q3.dta, replace
-{txt}file output_q3.dta saved
-
+. 
+. * Program which runs the monte-carlo experiment
+. program CVsim, rclass
+{txt}  1{com}.         drop _all
+{txt}  2{com}.         set obs 1000
+{txt}  3{com}.         forvalues i = 0/20 {c -(} 
+{txt}  4{com}.                 gen CV`i' = 0
+{txt}  5{com}.         {c )-}
+{txt}  6{com}.         gen x = runiform(-1,1)
+{txt}  7{com}.         gen e = x^2*(rchi2(5)-5)
+{txt}  8{com}.         gen y = exp(-0.1*(4*x-1)^2)*sin(5*x)+e
+{txt}  9{com}.         forvalues i = 0/20 {c -(} 
+{txt} 10{com}.                 gen x`i' = x^`i'
+{txt} 11{com}.         {c )-}
+{txt} 12{com}.         forvalues i = 0/20 {c -(}
+{txt} 13{com}.                 global xlist = "x0-x`i'"
+{txt} 14{com}.                 di "$xlist"
+{txt} 15{com}.                 mata CV("$xlist", `i')
+{txt} 16{com}.                 replace CV`i' = mCV`i'
+{txt} 17{com}.         {c )-}
+{txt} 18{com}. end 
+{txt}
 {com}. 
 . 
 . 
-. use output_q3,clear
+. * Run the experiment
+. set seed 12345
 {txt}
-{com}. gen obs = _n
+{com}. simulate CV0=CV0 CV1=CV1 CV2=CV2 CV3=CV3 CV4=CV4 CV5=CV5 CV6=CV6 CV7=CV7 CV8=CV8 /// 
+>         CV9=CV9 CV10=CV10 CV11=CV11 CV12=CV12 CV13=CV13 CV14=CV14 CV15=CV15 ///
+>         CV16=CV16 CV17=CV17 CV18=CV18 CV19=CV19 CV20=CV20, reps(100) nodots: CVsim
+{p2colset 7 17 21 2}{...}
+
+{txt}{p2col :command:}CVsim{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :CV0:}{res:CV0}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :CV1:}{res:CV1}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :CV2:}{res:CV2}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :CV3:}{res:CV3}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :CV4:}{res:CV4}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :CV5:}{res:CV5}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :CV6:}{res:CV6}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :CV7:}{res:CV7}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :CV8:}{res:CV8}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :CV9:}{res:CV9}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :CV10:}{res:CV10}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :CV11:}{res:CV11}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :CV12:}{res:CV12}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :CV13:}{res:CV13}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :CV14:}{res:CV14}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :CV15:}{res:CV15}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :CV16:}{res:CV16}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :CV17:}{res:CV17}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :CV18:}{res:CV18}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :CV19:}{res:CV19}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :CV20:}{res:CV20}{p_end}
+
+
+{com}. collapse *
 {txt}
-{com}. reshape long v_hat theta_hat, i(obs) j(k)
-{txt}(note: j = 1 2 3 4 5 6 7 8 9 10 11 12 13 14)
+{com}. gen i = 1
+{txt}
+{com}. reshape long CV, i(i) j(k)
+{txt}(note: j = 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20)
 
 Data{col 36}wide{col 43}->{col 48}long
 {hline 77}
-Number of obs.                 {res}    1000   {txt}->{res}   14000
-{txt}Number of variables            {res}      29   {txt}->{res}       4
-{txt}j variable (14 values)                    ->   {res}k
+Number of obs.                 {res}       1   {txt}->{res}      21
+{txt}Number of variables            {res}      22   {txt}->{res}       3
+{txt}j variable (21 values)                    ->   {res}k
 {txt}xij variables:
-              {res}v_hat1 v_hat2 ... v_hat14   {txt}->   {res}v_hat
-  theta_hat1 theta_hat2 ... theta_hat14   {txt}->   {res}theta_hat
+                       {res}CV0 CV1 ... CV20   {txt}->   {res}CV
 {txt}{hline 77}
 
-{com}. collapse (mean) mean_v_hat= v_hat  mean_theta_hat=theta_hat (sd) sd_theta_hat = theta_hat, by(k) 
+{com}. sort CV
 {txt}
-{com}. gen mean_bias = mean_theta_hat  - 1
+{com}. local min = k[1]
 {txt}
-{com}. gen v_theta_hat = sd_theta_hat^2
+{com}. twoway scatter CV k, ytitle("Mean CV") xtitle("K") xlabel(0(2)20) xmtick(0(1)20) xline(`min')
+{res}{txt}
+{com}. 
+. 
+. 
+. 
+. ***************
+. ***Problem 2b 
+. ***************
+. 
+. * Program which runs the monte-carlo experiment for mu_0
+. program muhatsim, rclass
+{txt}  1{com}.         drop _all
+{txt}  2{com}.         set obs 1000
+{txt}  3{com}.         gen x = runiform(-1,1)
+{txt}  4{com}.         gen e = x^2*(rchi2(5)-5)
+{txt}  5{com}.         gen y = exp(-0.1*(4*x-1)^2)*sin(5*x)+e
+{txt}  6{com}.         forvalues p = 0/7 {c -(} 
+{txt}  7{com}.                 gen x`p' = x^`p'
+{txt}  8{com}.         {c )-}
+{txt}  9{com}.         reg y x0-x7, nocons
+{txt} 10{com}.         clear
+{txt} 11{com}.         set obs 11
+{txt} 12{com}.         gen n = _n
+{txt} 13{com}.         gen foo = 1
+{txt} 14{com}.         gen x = -1+(_n-1)/5
+{txt} 15{com}.         forvalues p = 0/7 {c -(} 
+{txt} 16{com}.                 gen x`p' = x^`p'
+{txt} 17{com}.         {c )-}
+{txt} 18{com}.         predict muhat
+{txt} 19{com}.         predict se, stdp
+{txt} 20{com}.         generate lb = muhat - invnormal(0.975)*se
+{txt} 21{com}.         generate ub = muhat + invnormal(0.975)*se
+{txt} 22{com}. 
+.         
+.         
+.         keep n muhat foo lb ub 
+{txt} 23{com}.         reshape wide muhat lb ub, i(foo) j(n)
+{txt} 24{com}. end
 {txt}
 {com}. 
-. log close
-      {txt}name:  {res}<unnamed>
-       {txt}log:  {res}/Users/erinmarkiewitz/Dropbox/Phd_Coursework/Econ675/hw2\results\pset2_stata.smcl
-  {txt}log type:  {res}smcl
- {txt}closed on:  {res}11 Oct 2018, 14:38:04
-{txt}{.-}
-{smcl}
-{txt}{sf}{ul off}
+. 
+. 
+. set seed 12345
+{txt}
+{com}. simulate muhat1=muhat1 muhat2=muhat2 muhat3=muhat3 muhat4=muhat4 muhat5=muhat5 ///
+>         muhat6=muhat6 muhat7=muhat7 muhat8=muhat8 muhat9=muhat9 muhat10=muhat10 muhat11=muhat11 ///
+>         ub1=ub1 ub2=ub2 ub3=ub3 ub4=ub4 ub5=ub5 ub6=ub6 ub7=ub7 ub8=ub8 ub9=ub9 ub10=ub10 ub11=ub11 ///
+>         lb1=lb1 lb2=lb2 lb3=lb3 lb4=lb4 lb5=lb5 lb6=lb6 lb7=lb7 lb8=lb8 lb9=lb9 lb10=lb10 lb11=lb11, reps(1000) nodots: muhatsim
+{p2colset 7 17 21 2}{...}
+
+{txt}{p2col :command:}muhatsim{p_end}
+{p2colset 8 17 21 2}{...}
+{p2col :muhat1:}{res:muhat1}{p_end}
+{p2colset 8 17 21 2}{...}
+{p2col :muhat2:}{res:muhat2}{p_end}
+{p2colset 8 17 21 2}{...}
+{p2col :muhat3:}{res:muhat3}{p_end}
+{p2colset 8 17 21 2}{...}
+{p2col :muhat4:}{res:muhat4}{p_end}
+{p2colset 8 17 21 2}{...}
+{p2col :muhat5:}{res:muhat5}{p_end}
+{p2colset 8 17 21 2}{...}
+{p2col :muhat6:}{res:muhat6}{p_end}
+{p2colset 8 17 21 2}{...}
+{p2col :muhat7:}{res:muhat7}{p_end}
+{p2colset 8 17 21 2}{...}
+{p2col :muhat8:}{res:muhat8}{p_end}
+{p2colset 8 17 21 2}{...}
+{p2col :muhat9:}{res:muhat9}{p_end}
+{p2colset 7 17 21 2}{...}
+{p2col :muhat10:}{res:muhat10}{p_end}
+{p2colset 7 17 21 2}{...}
+{p2col :muhat11:}{res:muhat11}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub1:}{res:ub1}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub2:}{res:ub2}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub3:}{res:ub3}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub4:}{res:ub4}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub5:}{res:ub5}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub6:}{res:ub6}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub7:}{res:ub7}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub8:}{res:ub8}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub9:}{res:ub9}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :ub10:}{res:ub10}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :ub11:}{res:ub11}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb1:}{res:lb1}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb2:}{res:lb2}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb3:}{res:lb3}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb4:}{res:lb4}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb5:}{res:lb5}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb6:}{res:lb6}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb7:}{res:lb7}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb8:}{res:lb8}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb9:}{res:lb9}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :lb10:}{res:lb10}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :lb11:}{res:lb11}{p_end}
+
+
+{com}. gen i = _n
+{txt}
+{com}. reshape long muhat ub lb, i(i) j(grid)
+{txt}(note: j = 1 2 3 4 5 6 7 8 9 10 11)
+
+Data{col 36}wide{col 43}->{col 48}long
+{hline 77}
+Number of obs.                 {res}    1000   {txt}->{res}   11000
+{txt}Number of variables            {res}      34   {txt}->{res}       5
+{txt}j variable (11 values)                    ->   {res}grid
+{txt}xij variables:
+              {res}muhat1 muhat2 ... muhat11   {txt}->   {res}muhat
+                       ub1 ub2 ... ub11   {txt}->   {res}ub
+                       lb1 lb2 ... lb11   {txt}->   {res}lb
+{txt}{hline 77}
+
+{com}. collapse muhat ub lb, by(grid)
+{txt}
+{com}. gen x = -1+ (grid-1)/5
+{txt}
+{com}. twoway (function y = exp(-0.1*(4*x-1)^2)*sin(5*x), range(-1 1) lcolor(red)) ///
+>         (line muhat x, lcolor(gs6)) (line lb x, lcolor(gs6) lpattern(dash)) (line ub x, lcolor(gs6) lpattern(dash)), ///
+>         legend(order(1 "DGP" 2 "Prediction" 3 "Confidence Interval") rows(1)) ytitle(Y) xtitle(X) title("Q2b")
+{res}{txt}
+{com}. graph export $resdir\pset2q2b.png, replace
+{txt}(file /Users/erinmarkiewitz/Dropbox/Phd_Coursework/Econ675/hw2\results\pset2q2b.png written in PNG format)
+
+{com}. 
+. 
+. 
+. * Program which runs the monte-carlo experiment for mu_1
+. program dmuhatsim, rclass
+{txt}  1{com}.         drop _all
+{txt}  2{com}.         set obs 1000
+{txt}  3{com}.         gen x = runiform(-1,1)
+{txt}  4{com}.         gen e = x^2*(rchi2(5)-5)
+{txt}  5{com}.         gen y = exp(-0.1*(4*x-1)^2)*((0.8-3.2*x)*sin(5*x)+5*cos(5*x)) + e
+{txt}  6{com}.         forvalues p = 0/7 {c -(} 
+{txt}  7{com}.                 gen x`p' = x^`p'
+{txt}  8{com}.         {c )-}
+{txt}  9{com}.         reg y x0-x7, nocons
+{txt} 10{com}.         clear
+{txt} 11{com}.         set obs 11
+{txt} 12{com}.         gen n = _n
+{txt} 13{com}.         gen foo = 1
+{txt} 14{com}.         gen x = -1+(_n-1)/5
+{txt} 15{com}.         forvalues p = 0/7 {c -(} 
+{txt} 16{com}.                 gen x`p' = x^`p'
+{txt} 17{com}.         {c )-}
+{txt} 18{com}.         predict dmuhat
+{txt} 19{com}.         predict se, stdp
+{txt} 20{com}.         generate lb = dmuhat - invnormal(0.975)*se
+{txt} 21{com}.         generate ub = dmuhat + invnormal(0.975)*se
+{txt} 22{com}. 
+.         
+.         
+.         keep n dmuhat foo lb ub 
+{txt} 23{com}.         reshape wide dmuhat lb ub, i(foo) j(n)
+{txt} 24{com}. end
+{txt}
+{com}. 
+. 
+. set seed 12345
+{txt}
+{com}. simulate dmuhat1=dmuhat1 dmuhat2=dmuhat2 dmuhat3=dmuhat3 dmuhat4=dmuhat4 dmuhat5=dmuhat5 ///
+>         dmuhat6=dmuhat6 dmuhat7=dmuhat7 dmuhat8=dmuhat8 dmuhat9=dmuhat9 dmuhat10=dmuhat10 dmuhat11=dmuhat11 ///
+>         ub1=ub1 ub2=ub2 ub3=ub3 ub4=ub4 ub5=ub5 ub6=ub6 ub7=ub7 ub8=ub8 ub9=ub9 ub10=ub10 ub11=ub11 ///
+>         lb1=lb1 lb2=lb2 lb3=lb3 lb4=lb4 lb5=lb5 lb6=lb6 lb7=lb7 lb8=lb8 lb9=lb9 lb10=lb10 lb11=lb11, reps(1000) nodots: dmuhatsim
+{p2colset 7 17 21 2}{...}
+
+{txt}{p2col :command:}dmuhatsim{p_end}
+{p2colset 7 17 21 2}{...}
+{p2col :dmuhat1:}{res:dmuhat1}{p_end}
+{p2colset 7 17 21 2}{...}
+{p2col :dmuhat2:}{res:dmuhat2}{p_end}
+{p2colset 7 17 21 2}{...}
+{p2col :dmuhat3:}{res:dmuhat3}{p_end}
+{p2colset 7 17 21 2}{...}
+{p2col :dmuhat4:}{res:dmuhat4}{p_end}
+{p2colset 7 17 21 2}{...}
+{p2col :dmuhat5:}{res:dmuhat5}{p_end}
+{p2colset 7 17 21 2}{...}
+{p2col :dmuhat6:}{res:dmuhat6}{p_end}
+{p2colset 7 17 21 2}{...}
+{p2col :dmuhat7:}{res:dmuhat7}{p_end}
+{p2colset 7 17 21 2}{...}
+{p2col :dmuhat8:}{res:dmuhat8}{p_end}
+{p2colset 7 17 21 2}{...}
+{p2col :dmuhat9:}{res:dmuhat9}{p_end}
+{p2colset 6 17 21 2}{...}
+{p2col :dmuhat10:}{res:dmuhat10}{p_end}
+{p2colset 6 17 21 2}{...}
+{p2col :dmuhat11:}{res:dmuhat11}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub1:}{res:ub1}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub2:}{res:ub2}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub3:}{res:ub3}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub4:}{res:ub4}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub5:}{res:ub5}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub6:}{res:ub6}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub7:}{res:ub7}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub8:}{res:ub8}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :ub9:}{res:ub9}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :ub10:}{res:ub10}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :ub11:}{res:ub11}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb1:}{res:lb1}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb2:}{res:lb2}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb3:}{res:lb3}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb4:}{res:lb4}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb5:}{res:lb5}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb6:}{res:lb6}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb7:}{res:lb7}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb8:}{res:lb8}{p_end}
+{p2colset 11 17 21 2}{...}
+{p2col :lb9:}{res:lb9}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :lb10:}{res:lb10}{p_end}
+{p2colset 10 17 21 2}{...}
+{p2col :lb11:}{res:lb11}{p_end}
+
+
+{com}. gen i = _n
+{txt}
+{com}. reshape long dmuhat ub lb, i(i) j(grid)
+{txt}(note: j = 1 2 3 4 5 6 7 8 9 10 11)
+
+Data{col 36}wide{col 43}->{col 48}long
+{hline 77}
+Number of obs.                 {res}    1000   {txt}->{res}   11000
+{txt}Number of variables            {res}      34   {txt}->{res}       5
+{txt}j variable (11 values)                    ->   {res}grid
+{txt}xij variables:
+           {res}dmuhat1 dmuhat2 ... dmuhat11   {txt}->   {res}dmuhat
+                       ub1 ub2 ... ub11   {txt}->   {res}ub
+                       lb1 lb2 ... lb11   {txt}->   {res}lb
+{txt}{hline 77}
+
+{com}. collapse dmuhat ub lb, by(grid)
+{txt}
+{com}. gen x = -1+ (grid-1)/5
+{txt}
+{com}. twoway (function y = exp(-0.1*(4*x-1)^2)*((0.8-3.2*x)*sin(5*x)+5*cos(5*x)), range(-1 1) lcolor(red)) ///
+>         (line dmuhat x, lcolor(gs6)) (line lb x, lcolor(gs6) lpattern(dash)) (line ub x, lcolor(gs6) lpattern(dash)), ///
+>         legend(order(1 "DGP" 2 "Prediction" 3 "Confidence Interval") rows(1)) ytitle(Y) xtitle(X) title("Q2d")
+{res}{txt}
+{com}. graph export $resdir\pset2q2d.png, replace
+{txt}(file /Users/erinmarkiewitz/Dropbox/Phd_Coursework/Econ675/hw2\results\pset2q2d.png written in PNG format)
+
+{com}. 
+. 
+. 
+. 
+. /*
+> 
+> *******
+> *** Problem 3
+> *******
+> 
+> drop _all
+> set obs 1000
+> local theta = 1 
+> local d = 5
+> local n = 500
+> 
+> forvalues p = 1/14 {c -(} 
+>         gen v_hat`p' = .
+>         gen theta_hat`p' = .
+> 
+> {c )-}
+> 
+> 
+> mata:
+>         void polyloop(i) {c -(}
+>                 real matrix v_hat
+>                 real matrix theta_hat
+> 
+>                 X       = uniform(`n',`d'):*2 :-1
+>                 ep      = invnormal(uniform(`n',1)):*0.3637899:*(1 :+ rowsum(X:^2)) 
+>                 gx      = exp(rowsum(X:^2))
+>                 T       = invnormal(uniform(`n',1)) + rowsum(X:^2):^.5 :>= 0
+>                 Y   = T + gx + ep 
+> 
+> 
+>                 A = asarray_create("real",1)
+>                 cons= J(500,1,1)
+>                 X2      = X:^2
+>                 X3      = X:^3
+>                 X4      = X:^4
+>                 X5      = X:^5
+>                 X6      = X:^6
+>                 X7      = X:^7
+>                 X8      = X:^8
+>                 X9      = X:^9
+>                 X10 = X:^10
+> 
+>                 X1k = X#X
+>                 X2k = X2#X2
+>                 X3k = X3#X3
+>                 X4k = X4#X4
+> 
+>                 X1k = X1k[1::`n',2::5], X1k[1::`n', 8::10], X1k[1::`n',14::15], X1k[1::`n', 20]
+>                 X2k = X2k[1::`n',2::5], X2k[1::`n', 8::10], X2k[1::`n',14::15], X2k[1::`n', 20]
+>                 X3k = X3k[1::`n',2::5], X3k[1::`n', 8::10], X3k[1::`n',14::15], X3k[1::`n', 20]
+>                 X4k = X4k[1::`n',2::5], X4k[1::`n', 8::10], X4k[1::`n',14::15], X4k[1::`n', 20]
+> 
+> 
+>                 asarray(A,1,X)
+>                 asarray(A,2,(asarray(A,1),X2))
+>                 asarray(A,3,(asarray(A,2),X1k))
+>                 asarray(A,4,(asarray(A,3),X3))
+>                 asarray(A,5,(asarray(A,4),X2k))
+>                 asarray(A,6,(asarray(A,5),X4))
+>                 asarray(A,7,(asarray(A,6),X3k))
+>                 asarray(A,8,(asarray(A,7),X5))
+>                 asarray(A,9,(asarray(A,8),X4k))
+>                 asarray(A,10,(asarray(A,9),X6))
+>                 asarray(A,11,(asarray(A,10),X7))
+>                 asarray(A,12,(asarray(A,11),X8))
+>                 asarray(A,13,(asarray(A,12),X9))
+>                 asarray(A,14,(asarray(A,13),X10))
+> 
+> 
+>                 theta_hat = I(1,14):*0
+>                 v_hat = I(1,14):*0
+>                 k_hat = I(1,14):*0
+> 
+>                 for (j=1; j<=14; j++) {c -(}
+> 
+>                         Z = qrsolve(cons,(T,asarray(A,j)))
+>                         ZZ  = Z*Z'
+>                         Yhat = ZZ*Y
+>                         W = diag(ZZ)
+>                         ZQ = (cons,asarray(A,j))*invsym((cons,asarray(A,j))'*(cons,asarray(A,j)))*(cons,asarray(A,j))'
+>                         M = I(`n') - ZQ
+>                         YM = M*Y
+>                         TM = M*T
+>                         theta_hat[1,j] = (TM'*YM) / (TM'*TM)
+>                         sigma = diag(ZQ*(Y-T*theta_hat[1,j]))
+>                         v_hat[1,j] = invsym(T'*ZQ*T)*(T'*ZQ*sigma*ZQ*T)*invsym(T'*ZQ*T)
+>                         st_store(i, "v_hat"+strofreal(j), v_hat[1,j])
+>                         st_store(i, "theta_hat"+strofreal(j), theta_hat[1,j])
+>                 {c )-}
+> 
+>         {c )-}
+> end
+> 
+> 
+> forvalues i = 1/10 {c -(}
+>         mata polyloop(`i')
+> {c )-}
+> save output_q3.dta, replace
+> 
+> use output_q3,clear
+> gen obs = _n
+> reshape long v_hat theta_hat, i(obs) j(k)
+> collapse (mean) mean_v_hat= v_hat  mean_theta_hat=theta_hat (sd) sd_theta_hat = theta_hat, by(k) 
+> gen mean_bias = mean_theta_hat  - 1
+> gen v_theta_hat = sd_theta_hat^2
+> 
+> *coverage rate test
+> //mean_theta_hat + 1.96 * sd_theta_hat/sqrt(`n')
+> 
+> log close
+> translate $resdir\pset2_stata.smcl $resdir\pset2_stata.pdf, replace
+> 
+> 
+
+{txt}end of do-file
+
+{com}. 
