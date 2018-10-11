@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/erinmarkiewitz/Dropbox/Phd_Coursework/Econ675/hw2\results\pset2_stata.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res}11 Oct 2018, 11:34:01
+ {txt}opened on:  {res}11 Oct 2018, 11:50:24
 {txt}
 {com}. 
 . 
@@ -62,8 +62,9 @@ now 500
 {com}. 
 . mata:
 {txt}{hline 49} mata (type {cmd:end} to exit) {hline}
-{com}: void polyloop() {c -(}
-> 
+{com}: function polyloop() {c -(}
+> real matrix se_hat
+> real matrix theta_hat
 > 
 > X       = uniform(`n',`d'):*2 :-1
 > ep      = invnormal(uniform(`n',1)):*0.3637899:*(1 :+ rowsum(X:^2)) 
@@ -129,14 +130,15 @@ now 500
 > sigma = diag(ZQ*(Y-T*theta_hat[1,j]))
 > se_hat[1,j] = sqrt(invsym(T'*ZQ*T)*(T'*ZQ*sigma*ZQ*T)*invsym(T'*ZQ*T))
 > {c )-}
-> se_hat
-> theta_hat
+>         st_matrix("r(se_hat)", se_hat)
+>         st_matrix("r(theta_hat)", theta_hat)
+> 
 > {c )-}
 {txt}note: variable k_hat set but not used
 note: variable Yhat set but not used
 note: variable W set but not used
 
-{com}: end
+{com}:            end
 {txt}{hline}
 
 {com}. 
@@ -173,33 +175,14 @@ note: variable W set but not used
 {txt}end of do-file
 
 {com}. mata: polyloop()
-{res}       {txt}          1             2             3             4             5
-    {c TLC}{hline 71}
-  1 {c |}  {res}.1124893006   .1421339959   .1421339959   .1421158938   .1421158938
-{txt}    {c BLC}{hline 71}
-                 6             7             8             9            10
-     {hline 71}
-  1    {res}.1405886704   .1405886704   .1395233698   .1395233698    .139905887
-{txt}     {hline 71}
-                11            12            13            14
-     {hline 57}{c TRC}
-  1    {res} .140060976   .1403000748   .1403671858   .1398276836{txt}  {c |}
-     {hline 57}{c BRC}
-                  1              2              3              4              5
-    {c TLC}{hline 76}
-  1 {c |}  {res} 2.788771477   -.0162234863   -.0162234863   -.0155068675   -.0155068675
-{txt}    {c BLC}{hline 76}
-                  6              7              8              9             10
-     {hline 76}
-  1    {res} .1266834963    .1266834963    .2248989045    .2248989045    .1810274939
-{txt}     {hline 76}
-                 11             12             13             14
-     {hline 61}{c TRC}
-  1    {res} .1563435275    .1232246281    .1005299808    .1506885882{txt}  {c |}
-     {hline 61}{c BRC}
+{res}
+{com}. ret li
 
-{com}. mata: se_hat
-{res}{err}                 <istmt>:  3499  se_hat not found
-{txt}{search r(3499), local:r(3499);}
+{txt}scalars:
+             r(k_drop) =  {res}0
+
+{txt}matrices:
+          r(theta_hat) : {res} 1 x 14
+             {txt}r(se_hat) : {res} 1 x 14
 
 {com}. 

@@ -55,8 +55,9 @@ local d = 5
 local n = 500
 
 mata:
-void polyloop() {
-
+function polyloop() {
+real matrix se_hat
+real matrix theta_hat
 
 X 	= uniform(`n',`d'):*2 :-1
 ep	= invnormal(uniform(`n',1)):*0.3637899:*(1 :+ rowsum(X:^2)) 
@@ -122,10 +123,11 @@ theta_hat[1,j] = (TM'*YM) / (TM'*TM)
 sigma = diag(ZQ*(Y-T*theta_hat[1,j]))
 se_hat[1,j] = sqrt(invsym(T'*ZQ*T)*(T'*ZQ*sigma*ZQ*T)*invsym(T'*ZQ*T))
 }
-se_hat
-theta_hat
+	st_matrix("r(se_hat)", se_hat)
+	st_matrix("r(theta_hat)", theta_hat)
+
 }
-end
+	   end
 
 /*
 forv iter = 0/9{
