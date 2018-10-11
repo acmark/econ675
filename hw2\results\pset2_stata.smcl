@@ -1,0 +1,211 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/erinmarkiewitz/Dropbox/Phd_Coursework/Econ675/hw2\results\pset2_stata.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}10 Oct 2018, 23:07:42
+{txt}
+{com}. 
+. 
+. *******
+. *** Problem 1 
+. *******
+. /*
+> set obs 10000
+> timer on 1
+> program IMSEsim, rclass
+> drop _all
+> set obs 1000
+> gen x =  rnormal(-1/4, 5/8)
+> gen fx = normalden(-1/4, 5/8)
+> _kdens x, at(x) generate(fxh) bw(.5) kernel(epan2)
+> gen diffLI = (fx - fxh)^2 
+> gen diffL0 = 0
+> 
+> 
+> forvalues i = 1/1000 {c -(}
+>         _kdens x if _n != `i', at(x) generate(fxh`i') bw(.5) kernel(epan2) 
+>         replace diffL0 = (fx - fxh`i')^2 if _n == `i'
+> {c )-}
+> 
+> qui summ diffLI
+> return scalar data1 = r(mean)
+> qui summ diffL0
+> return scalar data2 = r(mean)
+> end
+> 
+> 
+> 
+> simulate IMSE_LI=r(data1) IMSE_L0 = r(data2), reps(1) nodots: IMSEsim
+> timer off 1
+> timer list
+> */
+. 
+. 
+. *******
+. *** Problem 3
+. *******
+. set obs 500
+{txt}{p}
+number of observations (_N)  was 0,
+now 500
+{p_end}
+
+{com}. drop _all
+{txt}
+{com}. local theta = 1 
+{txt}
+{com}. local d = 5
+{txt}
+{com}. local n = 500
+{txt}
+{com}. 
+. mata:
+{txt}{hline 49} mata (type {cmd:end} to exit) {hline}
+{com}: X       = uniform(`n',`d'):*2 :-1
+{res}
+{com}: ep      = invnormal(uniform(`n',1)):*0.3637899:*(1 :+ rowsum(X:^2)) 
+{res}
+{com}: gx      = exp(rowsum(X:^2))
+{res}
+{com}: T       = invnormal(uniform(`n',1)) + rowsum(X:^2):^.5 :>= 0
+{res}
+{com}: Y   = T + gx + ep 
+{res}
+{com}: 
+: 
+: A = asarray_create("real",1)
+{res}
+{com}: cons= J(500,1,1)
+{res}
+{com}: X2      = X:^2
+{res}
+{com}: X3      = X:^3
+{res}
+{com}: X4      = X:^4
+{res}
+{com}: X5      = X:^5
+{res}
+{com}: X6      = X:^6
+{res}
+{com}: X7      = X:^7
+{res}
+{com}: X8      = X:^8
+{res}
+{com}: X9      = X:^9
+{res}
+{com}: X10 = X:^10
+{res}
+{com}: X1k = X#X
+{res}
+{com}: X2k = X2#X2
+{res}
+{com}: X3k = X3#X3
+{res}
+{com}: X4k = X4#X4
+{res}
+{com}: X1k = X1k[1::`n',1::`d'*`d']
+{res}
+{com}: X2k = X2k[1::`n',1::`d'*`d']
+{res}
+{com}: X3k = X3k[1::`n',1::`d'*`d']
+{res}
+{com}: X4k = X4k[1::`n',1::`d'*`d']
+{res}
+{com}: 
+: asarray(A,1,X)
+{res}
+{com}: asarray(A,2,(asarray(A,1),X2))
+{res}
+{com}: asarray(A,3,(asarray(A,2),X1k))
+{res}
+{com}: asarray(A,4,(asarray(A,3),X3))
+{res}
+{com}: asarray(A,5,(asarray(A,4),X2k))
+{res}
+{com}: asarray(A,6,(asarray(A,5),X4))
+{res}
+{com}: asarray(A,7,(asarray(A,6),X3k))
+{res}
+{com}: asarray(A,8,(asarray(A,7),X5))
+{res}
+{com}: asarray(A,9,(asarray(A,8),X4k))
+{res}
+{com}: asarray(A,10,(asarray(A,9),X6))
+{res}
+{com}: asarray(A,11,(asarray(A,10),X7))
+{res}
+{com}: asarray(A,12,(asarray(A,11),X8))
+{res}
+{com}: asarray(A,13,(asarray(A,12),X9))
+{res}
+{com}: asarray(A,14,(asarray(A,13),X10))
+{res}
+{com}: 
+: 
+: Z = qrsolve(cons,(T,asarray(A,1)))
+{res}
+{com}: ZZ  = Z*Z'
+{res}
+{com}: Yhat = ZZ*Y
+{res}
+{com}: W = diag(ZZ)
+{res}
+{com}: lolk = mean((Y-Yhat)/(1-W)^2)
+{res}
+{com}: 
+: 
+: ZQ = (cons,asarray(A,1))*invsym((cons,asarray(A,1))'*(cons,asarray(A,1)))*(cons,asarray(A,1))'
+{res}
+{com}: 
+: M = I(`n') - ZQ
+{res}
+{com}: YM = M*Y
+{res}
+{com}: TM = M*T
+{res}
+{com}: theta_hat = (TM'*YM) / (TM'*TM)
+{res}
+{com}: sigma = diag((YM - TM*theta_hat)'*(YM - TM*theta_hat))
+{res}
+{com}: se_hat = sqrt(TM'*sigma*TM / (TM'*TM))
+{res}
+{com}: 
+: 
+: end
+{txt}{hline}
+
+{com}. 
+. /*
+> forv iter = 0/9{c -(}
+> svmat X`iter', n(x`iter'_)
+> {c )-}
+> 
+> 
+> forv iter = 1/4{c -(}
+> svmat X`iter'k, n(xk`iter')
+> {c )-}
+> 
+> svmat ep, n(ep)
+> svmat gx, n(gx)
+> svmat T, n(T)
+> svmat Y, n(Y)
+> g cons = 1 //only for npseries
+> 
+> local poly = "cons x1_* x2_* xk1* x3_* xk2* x4_* x3k* x5_* xk4* x6_* x7_* x8_* x9_* x10_*"
+> forv iter = 1/14{c -(}
+> local wc = 5 + 5*`iter'
+> local varlist = substr("`poly'",1,`wc')
+> di "`varlist'"
+> semipar Y1 T1, nonpar(`varlist') 
+> 
+> 
+> {c )-}
+> 
+> di "`poly'"
+> 
+> 
+
+{txt}end of do-file
+
+{com}. 
