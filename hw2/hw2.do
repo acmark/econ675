@@ -48,7 +48,7 @@ timer list
 *******
 *** Problem 3
 *******
-/*
+
 drop _all
 set obs 1000
 local theta = 1 
@@ -56,7 +56,7 @@ local d = 5
 local n = 500
 
 forvalues p = 1/14 { 
-gen se_hat`p' = .
+gen v_hat`p' = .
 gen theta_hat`p' = .
 
 }
@@ -64,7 +64,7 @@ gen theta_hat`p' = .
 
 mata:
 void polyloop(i) {
-real matrix se_hat
+real matrix v_hat
 real matrix theta_hat
 
 X 	= uniform(`n',`d'):*2 :-1
@@ -114,7 +114,7 @@ asarray(A,14,(asarray(A,13),X10))
 
 
 theta_hat = I(1,14):*0
-se_hat = I(1,14):*0
+v_hat = I(1,14):*0
 k_hat = I(1,14):*0
 
 for (j=1; j<=14; j++) {
@@ -129,8 +129,8 @@ YM = M*Y
 TM = M*T
 theta_hat[1,j] = (TM'*YM) / (TM'*TM)
 sigma = diag(ZQ*(Y-T*theta_hat[1,j]))
-se_hat[1,j] = sqrt(invsym(T'*ZQ*T)*(T'*ZQ*sigma*ZQ*T)*invsym(T'*ZQ*T))
-st_store(i, "se_hat"+strofreal(j), se_hat[1,j])
+v_hat[1,j] = invsym(T'*ZQ*T)*(T'*ZQ*sigma*ZQ*T)*invsym(T'*ZQ*T)
+st_store(i, "v_hat"+strofreal(j), v_hat[1,j])
 st_store(i, "theta_hat"+strofreal(j), theta_hat[1,j])
 }
 
@@ -138,18 +138,19 @@ st_store(i, "theta_hat"+strofreal(j), theta_hat[1,j])
  end
 
  
-forvalues i = 1/1000 {
+forvalues i = 1/10 {
 mata polyloop(`i')
 }
 save output_q3.dta, replace
 
-*/
+
 
 use output_q3,clear
 gen obs = _n
-reshape long se_hat theta_hat, i(obs) j(k)
-collapse (mean) mean_se_hat= se_hat  mean_theta_hat=theta_hat (sd) sd_theta_hat = theta_hat, by(k) 
+reshape long v_hat theta_hat, i(obs) j(k)
+collapse (mean) mean_v_hat= v_hat  mean_theta_hat=theta_hat (sd) sd_theta_hat = theta_hat, by(k) 
 gen mean_bias = mean_theta_hat  - 1
+gen v_theta_hat = sd_theta_hat^2
 
 log close
 translate $resdir\pset2_stata.smcl $resdir\pset2_stata.pdf, replace
