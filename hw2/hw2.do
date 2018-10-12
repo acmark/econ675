@@ -10,45 +10,123 @@ cap log close
 log using $resdir\pset2_stata.smcl, replace
 
 
-*******
-*** Problem 1 
-*******
+************************************
+************ Question 1 ************
+************************************
 
-   set obs 10000
-   timer on 1
-   program IMSEsim, rclass
-   drop _all
-   set obs 1000
-   gen x =  rnormal(-1/4, 5/8)
-   gen fx = normalden(-1/4, 5/8)
-   _kdens x, at(x) generate(fxh) bw(.5) kernel(epan2)
-   gen diffLI = (fx - fxh)^2 
-   gen diffL0 = 0
+* Some values
+global M = 1000 //number of iterations
+global n = 1000 
+global hvalues .5 .6 .7 .8 0.8199 .9 1 1.1 1.2 1.3 1.4 1.5
+mat hvalues = (0.8199, .5, .6, .7, .8, .9, 1, 1.1, 1.2, 1.3, 1.4, 1.5)
+
+*DGP Values
+global mu1 = -1.5
+global mu2 = 1
+global sd1 = sqrt(1.5)
+global sd2 = 1
+	
+	mata:
+	//**********FUNCTIONS***********
+	// function for calculating kernel 
+	real scalar function kern(real scalar u){
+		return(.75*(1-u^2)*(abs(u)<=1))
+		}
+	
+	// function for calculating true density
+	real scalar function f_true(real scalar u){
+		return(.5*normalden(u,-1.5,sqrt(1.5)) + .5*normalden(u,1,1))
+		}
+		
+	// function for calculating MSE (LI & LO)
+	real vector function mse(real vector xdata, real scalar hvalue){
+		//Construct two matrices of xdata
+		M1 = J($n,$n,.) // n x n matrix with one column for each observation
+		M2 = J($n,$n,.) // n x n matrix with one row for each observation
+		for (i=1; i<= $n; i++) {
+			v = J($n,1,xdata[i])
+			M1[,i] = v
+			M2[i,] = v'
+			}
+		
+		M3 = (M1-M2)/hvalue //object to be evaluated by kernel
+		M4 = J($n,$n,.)
+		M5 = J($n,$n,.)
+		fx = J($n,1,.)
+		
+		for (i=1; i<=$n; i++){
+			for (j=1; j<=$n; j++){
+				M4[i,j] = kern(M3[i,j])
+			}
+			M5[i,] = M4[i,]
+			M5[i,i]=0
+			
+			fx[i,1] = f_true(xdata[i])
+		}
+		
+		fhat_LI = rowsum(M4)/($n*hvalue)
+		fhat_LO = rowsum(M5)/(($n-1)*hvalue)
+		
+		sqe_LI = (fhat_LI-fx):^2
+		sqe_LO = (fhat_LO-fx):^2
+		
+		mse_LI = mean(sqe_LI)
+		mse_LO = mean(sqe_LO)
+		
+		return((mse_LI,mse_LO))
+		}
+	
+	// function for importing/exporting to mata for mse calculation
+	void iteration(real scalar m){
+		x= st_data(.,.)
+		hvalues = st_matrix("hvalues")
+		
+		mse = J(12,2,.)
+		for (h=1; h<=12; h++){
+			mse[h,] = mse(x,hvalues[1,h])
+		}	
+		st_matrix("msetemp",mse)
+		}
+	end
+
+	
+	*Empty matrix to be filled
+	mat msesum = J(12,2,0)
+	
+	*Loop through iterations
+	timer on 1
+	forval m = 1/$M{
+	disp `m'
+	set obs $n
+	
+	*equally weight two normal distributions
+	gen comps = uniform() >= .5
+
+	*generate sample 
+	gen x = comps*rnormal($mu1,$sd1) + (1-comps)*rnormal($mu2,$sd2)
+	drop comps
+	
+	*call mata function to calculate mse
+	mata iteration(`m')
+	drop x
+	mat msesum = msesum + msetemp
+	}
+timer off 1
+timer list
+
+mat imse = msesum*1000
+svmat imse
+rename imse1 imse_li
+rename imse2 imse_lo
+
+egen h = fill(.5, .6, .7, .8, 0.8199, .9, 1, 1.1, 1.2, 1.3, 1.4, 1.5)
+
+twoway(line imse_li h)(line imse_lo h), ytitle("IMSE (Thousands)") ///
+xtitle("h") xline(0.8199) caption("Note: Vertical line is at h_AMSE")
+graph export $resdir/pset2q1.png, replace
 
 
-   forvalues i = 1/1000 {
-   _kdens x if _n != `i', at(x) generate(fxh`i') bw(.5) kernel(epan2) 
-   replace diffL0 = (fx - fxh`i')^2 if _n == `i'
-   }
 
-   qui summ diffLI
-   return scalar data1 = r(mean)
-   qui summ diffL0
-   return scalar data2 = r(mean)
-   end
-
-
-
-   simulate IMSE_LI=r(data1) IMSE_L0 = r(data2), reps(1000) nodots: IMSEsim
-   timer off 1
-   timer list
-
-
-
-
-
-
-/*
 **************
 **** Problem 2 
 **************
@@ -112,9 +190,8 @@ gen i = 1
 reshape long CV, i(i) j(k)
 sort CV
 local min = k[1]
-twoway scatter CV k, ytitle("Mean CV") xtitle("K") xlabel(0(2)20) xmtick(0(1)20) xline(`min')
-
-
+twoway scatter CV k, ytitle("Mean CV") xtitle("K") xlabel(0(2)20) xmtick(0(1)20) xline(`min') title("Average CV(K), across 1000 simulations")
+graph export $resdir\pset2q2b.png, replace
 
 
 ***************
@@ -164,8 +241,8 @@ collapse muhat ub lb, by(grid)
 gen x = -1+ (grid-1)/5
 twoway (function y = exp(-0.1*(4*x-1)^2)*sin(5*x), range(-1 1) lcolor(red)) ///
 	(line muhat x, lcolor(gs6)) (line lb x, lcolor(gs6) lpattern(dash)) (line ub x, lcolor(gs6) lpattern(dash)), ///
-	legend(order(1 "DGP" 2 "Prediction" 3 "Confidence Interval") rows(1)) ytitle(Y) xtitle(X) title("Q2b")
-graph export $resdir\pset2q2b.png, replace
+	legend(order(1 "DGP" 2 "Prediction" 3 "Confidence Interval") rows(1)) ytitle(Y) xtitle(X) title("Mu_hat(x) across 1000 simulations")
+graph export $resdir\pset2q2c.png, replace
 
 
 
@@ -211,7 +288,7 @@ collapse dmuhat ub lb, by(grid)
 gen x = -1+ (grid-1)/5
 twoway (function y = exp(-0.1*(4*x-1)^2)*((0.8-3.2*x)*sin(5*x)+5*cos(5*x)), range(-1 1) lcolor(red)) ///
 	(line dmuhat x, lcolor(gs6)) (line lb x, lcolor(gs6) lpattern(dash)) (line ub x, lcolor(gs6) lpattern(dash)), ///
-	legend(order(1 "DGP" 2 "Prediction" 3 "Confidence Interval") rows(1)) ytitle(Y) xtitle(X) title("Q2d")
+	legend(order(1 "DGP" 2 "Prediction" 3 "Confidence Interval") rows(1)) ytitle(Y) xtitle(X) title("(d/dx)*Mu_hat(x) across 1000 simulations")
 graph export $resdir\pset2q2d.png, replace
 
 
