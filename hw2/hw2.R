@@ -1,7 +1,6 @@
 ## ECON675: PS 2
 ## Erin Markiewitz 
 ## 10/12/2018
-
 ######################################################################
 # Load packages, clear workspace
 ######################################################################
@@ -14,7 +13,7 @@ library(boot)               #for bootstrapping
 options(scipen = 999)       #forces R to use normal numbers instead of scientific notation
 
 ######################################################################
-# Q3 (a): compute theoretically optimal bandwidth
+#Q1 (a): compute theoretically optimal bandwidth
 ######################################################################
 # NB. This code only makes sense with the associated tex file...
 
@@ -41,7 +40,7 @@ h_aimse <- ((1/(2*P*n))*(factorial(P)/k2)^2*(k3/k1))^(1/(1+2*P))
 
 
 ######################################################################
-# Q3 (b): monte carlo
+#Q1 (b): monte carlo
 ######################################################################
 
 # Function for EP kernel
@@ -139,7 +138,7 @@ IMSE_LI <- foreach(h=h.list, .combine='cbind') %:%
 
 
 ######################################################################
-# Q3 (d): rule-of-thumb bandwidth
+#Q1 (d): rule-of-thumb bandwidth
 ######################################################################
 
 # Write function to compute squared second derivative of normal density

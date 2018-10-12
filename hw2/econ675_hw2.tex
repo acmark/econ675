@@ -115,10 +115,8 @@ So continuing on, we just expand the first term a bit
 where $\nu_s(k) = \int\limits_\R k^{(s)} \left( u \right)^2 du $ is the roughness of the $s^{th}$ derivative of a given function $k$. Not that the variance is $O(1/n)$ and as $1/n>1/nh_n^{2s+1}$, so that means the statement above is equivalent to
 
 \begin{gather*}
-\V[\hat{f}^{(s)}(x)] = \frac{f(x) \nu_s(k) }{nh^{1+2s}}- \frac{1}{n}f^{(s)}(x)^2 + O\left(\frac{1}{n}\right)
+\V[\hat{f}^{(s)}(x)] = \frac{f(x) \nu_s(k) }{nh^{1+2s}}- \frac{1}{n}f^{(s)}(x)^2 + O\left(\frac{1}{nh_n^{2s+1}}\right)
 \end{gather*}
-   which gives the result.
-
 
 
 
@@ -197,11 +195,10 @@ It appears that the two monte carlo experiments in stata and r do a reasonable j
 Considering a rule-of-thumbs estimate of the bandwith, we assume the DGP is gaussian, so using the equation from 1.3.1 we find that.
 
 \begin{gather*}
-\bar{h}_{AIMSE} = M^{-1} \sum_{m=1}^M  \hat{h}_{AIMSE,m} =
+\bar{h}_{AIMSE} = M^{-1} \sum_{m=1}^M  \hat{h}_{AIMSE,m} \approx 987147
 \end{gather*}
 
-
-
+which is significantly biased upwards relative to the asymptotic optimal or the simulation estimates.
 
 
 \newpage
@@ -519,5 +516,64 @@ CI_{95} = \left[\hat{\theta}(K)  - 1.96  \sqrt{\hat{V}_{HCO} / n}  ; \hat{\theta
 
 \subsection{}
 
+\center
+\begin{tabular}{|c|c|c|c|c|c|c||}
+\hline
+k   &   coverage rate   &   mean $\hat{V}$   &  mean $\hat{\theta}$     &   SD of $\hat{\theta}$  &   mean bias   &   $\V[\hat{\theta}]$  \\
+\hline
+1   &   0   &   .0121515   &   3.038587   &   .5610881   &   2.038587   &   .3148198 \\
+2   &   .001   &   .0192048   &   .5193815   &   .4861081   &   -.4806185   &   .2363011 \\
+3   &   .001   &   .0192048   &   .5193815   &   .4861081   &   -.4806185   &   .2363011 \\
+4   &   .001   &   .0191404   &   .5346238   &   .5019035   &   -.4653762   &   .2519072 \\
+5   &   .001   &   .0191404   &   .5346238   &   .5019035   &   -.4653762   &   .2519072 \\
+6   &   0   &   .0190032   &   .5710299   &   .4311689   &   -.4289701   &   .1859066 \\
+7   &   0   &   .0190032   &   .5710299   &   .4311689   &   -.4289701   &   .1859066 \\
+8   &   .001   &   .0189843   &   .5708849   &   .4300738   &   -.4291151   &   .1849635 \\
+9   &   .001   &   .0189843   &   .5708849   &   .4300738   &   -.4291151   &   .1849635 \\
+10   &   .001   &   .0189318   &   .5813037   &   .4359568   &   -.4186963   &   .1900583 \\
+11   &   .001   &   .0189036   &   .584183   &   .453701   &   -.415817   &   .2058446 \\
+12   &   .001   &   .0187963   &   .6144832   &   .4626188   &   -.3855168   &   .2140162 \\
+13   &   0   &   .0187873   &   .6093753   &   .4969279   &   -.3906247   &   .2469373 \\
+14   &   .001   &   .0188136   &   .5898626   &   .4697601   &   -.4101374   &   .2206745 \\
+\hline
+\hline
+\end{tabular}
 
+At this point my estimates for stata are way off. I get a terrible coverage rate. I think it could be due to a number of factors. I attempted to build in a cross validation excercise into my program, but it was giving me weird results to I suppressed the output. I am confident that the optimal k by CV estimates is around 126. 
+
+\newpage
+\begin{tabular}{|c|c|c|c|c|c|c||}
+\hline
+k     &   mean $\hat{V}$   &  bias $\hat{\theta}$     &   SD of $\hat{\theta}$  &  $\V[\hat{\theta}]$  &   coverage rate  \\
+\hline
+6 & 2.856 & 1.856 & 0.481 & 0.465 & 0.972\\
+11 & 0.827 & -0.173 & 0.227 & 0.216 & 0.113\\
+21 & 0.833 & -0.167 & 0.227 & 0.214 & 0.113\\
+26 & 0.834 & -0.166 & 0.229 & 0.214 & 0.112\\
+56 & 0.852 & -0.148 & 0.226 & 0.201 & 0.131\\
+61 & 0.867 & -0.133 & 0.22 & 0.195 & 0.127\\
+126 & 1.009 & 0.009 & 0.113 & 0.101 & 0.089\\
+131 & 1.01 & 0.01 & 0.114 & 0.101 & 0.092\\
+252 & 1.007 & 0.007 & 0.123 & 0.094 & 0.134\\
+257 & 1.007 & 0.007 & 0.124 & 0.094 & 0.131\\
+262 & 1.007 & 0.007 & 0.125 & 0.094 & 0.141\\
+267 & 1.007 & 0.007 & 0.126 & 0.094 & 0.145\\
+272 & 1.007 & 0.007 & 0.128 & 0.095 & 0.145\\
+277 & 1.008 & 0.008 & 0.13 & 0.095 & 0.152\\
+\hline
+\hline
+\end{tabular}
+
+\vspace{1cm}
+The R code produces more reasonable results. This shows that including more terms in the polynomial does not neccesarly decrease bias. The cross validation exercise in R says that the optimal k is 126.
+
+\newpage
+\section{Code Appendix}
+\tiny
+\subsection*{Stata}
+\lstinputlisting{hw2.do}
+\subsection*{R}
+\lstinputlisting{h2_1.R}
+\lstinputlisting{hw2_2_r.R}
+\lstinputlisting{hw2_3_r.R}
 \end{document}
