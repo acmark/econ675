@@ -353,4 +353,16 @@ now 10,000
 {com}. save h2q1_output.dta
 {txt}file h2q1_output.dta saved
 
+{com}. tsline IMSE_LI _n
+{err}time variable not set, use {bf:tsset varname ...}
+{txt}{search r(111), local:r(111);}
+
+{com}. line IMSE_LI _n
+{err}variable {bf}_n{sf} not found
+{txt}{search r(111), local:r(111);}
+
+{com}. gen obs = _n
+
+. line IMSE_LI obs
+{res}
 {com}. 
