@@ -13,7 +13,7 @@ log using $resdir\pset2_stata.smcl, replace
 ************************************
 ************ Question 1 ************
 ************************************
-
+/*
 * Some values
 global M = 1000 //number of iterations
 global n = 1000 
@@ -125,7 +125,7 @@ twoway(line imse_li h)(line imse_lo h), ytitle("IMSE (Thousands)") ///
 xtitle("h") xline(0.8199) caption("Note: Vertical line is at h_AMSE")
 graph export $resdir/pset2q1.png, replace
 
-
+*?
 
 **************
 **** Problem 2 
@@ -294,7 +294,7 @@ graph export $resdir\pset2q2d.png, replace
 
 
 
-/*
+*/ */
 
 *******
 *** Problem 3
@@ -370,7 +370,7 @@ mata:
 
 		for (j=1; j<=14; j++) {
 
-			Z = qrsolve(cons,(T,asarray(A,j)))
+			Z = qrd(cons,(T,asarray(A,j)))
 			ZZ  = Z*Z'
 			Yhat = ZZ*Y
 			W = diag(ZZ)
@@ -392,7 +392,7 @@ end
 forvalues i = 1/10 {
 	mata polyloop(`i')
 }
-save output_q3.dta, replace
+save output_q3_temp.dta, replace
 
 use output_q3,clear
 gen obs = _n

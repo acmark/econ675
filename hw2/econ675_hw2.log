@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  12 OCT 2018 09:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  12 OCT 2018 15:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -360,26 +360,31 @@ Overfull \hbox (20.27737pt too wide) in paragraph at lines 97--97
 [] 
  []
 
-[3] [4] <rplot_hw2_q1.png, id=27, 576.1525pt x 377.41pt>
+[3] [4] [5] <rplot_hw2_q1.png, id=31, 576.1525pt x 377.41pt>
 File: rplot_hw2_q1.png Graphic file (type png)
 
 <use rplot_hw2_q1.png>
-Package pdftex.def Info: rplot_hw2_q1.png used on input line 149.
-(pdftex.def)             Requested size: 347.4876pt x 227.62204pt.
- <hw2q1_3.png, id=29, 541.02126pt x 393.47pt>
+Package pdftex.def Info: rplot_hw2_q1.png used on input line 190.
+(pdftex.def)             Requested size: 260.6113pt x 170.71652pt.
+ <hw2q1_3.png, id=33, 541.02126pt x 393.47pt>
 File: hw2q1_3.png Graphic file (type png)
 
 <use hw2q1_3.png>
-Package pdftex.def Info: hw2q1_3.png used on input line 150.
-(pdftex.def)             Requested size: 312.97527pt x 227.62204pt.
- [5 <./rplot_hw2_q1.png>] [6 <./hw2q1_3.png>]
-Overfull \hbox (58.37431pt too wide) in paragraph at lines 188--189
+Package pdftex.def Info: hw2q1_3.png used on input line 191.
+(pdftex.def)             Requested size: 234.73145pt x 170.71652pt.
+
+Overfull \hbox (28.1988pt too wide) in paragraph at lines 190--192
+[] [] 
+ []
+
+[6 <./rplot_hw2_q1.png> <./hw2q1_3.png>]
+Overfull \hbox (58.37431pt too wide) in paragraph at lines 217--218
 []$\OT1/cmr/m/n/12 , which can be rewrit-ten as a weighted least-squares prob-l
 em where $[](\OML/cmm/m/it/12 x\OT1/cmr/m/n/12 ) = []$
  []
 
 
-Overfull \hbox (14.01659pt too wide) in paragraph at lines 220--220
+Overfull \hbox (14.01659pt too wide) in paragraph at lines 249--249
 [] 
  []
 
@@ -387,56 +392,68 @@ Overfull \hbox (14.01659pt too wide) in paragraph at lines 220--220
 File: pset2q2b.png Graphic file (type png)
 
 <use pset2q2b.png>
-Package pdftex.def Info: pset2q2b.png used on input line 368.
+Package pdftex.def Info: pset2q2b.png used on input line 397.
 (pdftex.def)             Requested size: 156.56128pt x 113.81102pt.
  <pset2q2c_r.png, id=52, 579.16376pt x 380.42125pt>
 File: pset2q2c_r.png Graphic file (type png)
 
 <use pset2q2c_r.png>
-Package pdftex.def Info: pset2q2c_r.png used on input line 369.
+Package pdftex.def Info: pset2q2c_r.png used on input line 398.
 (pdftex.def)             Requested size: 173.2644pt x 113.81102pt.
  [10] <pset2q2c.png, id=56, 793.96625pt x 577.15625pt>
 File: pset2q2c.png Graphic file (type png)
 
 <use pset2q2c.png>
-Package pdftex.def Info: pset2q2c.png used on input line 371.
+Package pdftex.def Info: pset2q2c.png used on input line 402.
 (pdftex.def)             Requested size: 156.56128pt x 113.81102pt.
- <pset2q2d.png, id=57, 793.96625pt x 577.15625pt>
+ <pset2q2c11_r.png, id=57, 576.1525pt x 377.41pt>
+File: pset2q2c11_r.png Graphic file (type png)
+
+<use pset2q2c11_r.png>
+Package pdftex.def Info: pset2q2c11_r.png used on input line 403.
+(pdftex.def)             Requested size: 173.74379pt x 113.81102pt.
+ <pset2q2d.png, id=58, 793.96625pt x 577.15625pt>
 File: pset2q2d.png Graphic file (type png)
 
 <use pset2q2d.png>
-Package pdftex.def Info: pset2q2d.png used on input line 373.
+Package pdftex.def Info: pset2q2d.png used on input line 406.
 (pdftex.def)             Requested size: 156.56128pt x 113.81102pt.
- [11 <./pset2q2b.png> <./pset2q2c_r.png> <./pset2q2c.png> <./pset2q2d.png>] [12
-] [13] [14] (./econ675_hw2.aux) ) 
+ <pset2q2d_r.png, id=59, 576.1525pt x 377.41pt>
+File: pset2q2d_r.png Graphic file (type png)
+
+<use pset2q2d_r.png>
+Package pdftex.def Info: pset2q2d_r.png used on input line 407.
+(pdftex.def)             Requested size: 173.74379pt x 113.81102pt.
+ [11 <./pset2q2b.png> <./pset2q2c_r.png> <./pset2q2c.png> <./pset2q2c11_r.png> 
+<./pset2q2d.png> <./pset2q2d_r.png>] [12] [13] [14]
+(./econ675_hw2.aux) ) 
 Here is how much of TeX's memory you used:
- 4799 strings out of 493014
- 68847 string characters out of 6133351
+ 4809 strings out of 493014
+ 69035 string characters out of 6133351
  179425 words of memory out of 5000000
- 8260 multiletter control sequences out of 15000+600000
+ 8268 multiletter control sequences out of 15000+600000
  13024 words of font info for 50 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  37i,16n,40p,377b,223s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2016/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1
-/public/amsfonts/cm/cmbx6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/p
-ublic/amsfonts/cm/cmbx8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmex10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmmi12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/publi
-c/amsfonts/cm/cmmi6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/
-amsfonts/cm/cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/am
-sfonts/cm/cmr12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmr17.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmr6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmr8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmsy10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/c
-msy6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cms
-y8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/symbols/
-msbm10.pfb>
-Output written on econ675_hw2.pdf (14 pages, 544323 bytes).
+</usr/local/texlive/2016/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmbx12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmbx6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmbx8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmex10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmmi12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/c
+m/cmmi6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmmi8.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r12.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr1
+7.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.p
+fb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb>
+</usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
+/usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></u
+sr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr
+/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb>
+Output written on econ675_hw2.pdf (14 pages, 598733 bytes).
 PDF statistics:
- 123 PDF objects out of 1000 (max. 8388607)
+ 127 PDF objects out of 1000 (max. 8388607)
  79 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 31 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 41 words of extra memory for PDF output out of 10000 (max. 10000000)
 
