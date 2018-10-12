@@ -7,6 +7,7 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\E}{\mathbb{E}}
 \newcommand{\V}{\mathbb{V}}
+\newcommand{\qsum}{\sum\limits_{i=1}^n}
 
 \newcommand{\vpar}{\vspace{.3cm}}
 
@@ -44,7 +45,7 @@
 \maketitle
 \newpage
 \tableofcontents
-
+\newpage
 
 \section{Kernel Density Estimation}
 \subsection{}
@@ -277,7 +278,90 @@ CV(c) = \frac{1}{n} \sum\limits_{i=1}^n (y_i - \hat{e}(x_i))^2  =  \frac{1}{n} \
 
 where c is a tuning parameter ($h_n$ for LPR or a truncation K for series estimators)
 
+Note from the first part of the question, we found that we can right both regressor estimators as a weighted average of the outcome variable
 
+\begin{gather*}
+\hat{e}(x) = \frac{1}{n} \qsum w_{n,i}(x)y_i
+\end{gather*}
+where $w_{n,i}(x) = w_{n,i}(x_1, x_s, \cdots, x_n;x)$
+
+Now in estimation of the tuning parameter, we need our smoothing parameter $w_{n,i}$ to be consistent when we "leave one ($x_i$) out" for estimation. Our smoothing parameter sums to one in the case of the LPR and series estimators. So for cross validation, we need to adjust accordingly.
+
+
+\begin{gather*}
+\hat{e}_{(i)}(x) = \frac{1}{1-w_{ii}} \sum\limits_{i=1}^n w_{i,j}(x)y_i
+\end{gather*}
+
+So to get our result:
+
+\begin{align*}
+(1-w_{ii}) \hat{e}_{(i)}(x) & = \sum\limits_{j\neq i,j=1}^n w_{i,j}(x)y_j \\
+\hat{e}_{(i)}(x) &= \sum\limits_{j\neq i,j=1}^n w_{i,j}(x)y_j + w_{i,i}\hat{e}_{(i)}(x) \\
+  &= \sum\limits_{i=1}^n w_{i,j}(x)y_i + w_{ii}\hat{e}_{(i)}(x) - w_{i,i}y_i \\
+&= \hat{e}(x) + w_{ii}\hat{e}_{(i)}(x) - w_{i,i}y_i \\
+\end{align*}
+
+Which gives us
+
+\begin{align*}
+y_i - \hat{e}_{(i)}(x) &= y_i - \hat{e}_(x) - w_{i,i}\hat{e}_{(i)}(x) + w_{i,i}y_i\\
+y_i - \hat{e}_{(i)}(x) &= y_i - \hat{e}_(x) w_{i,i}(y_i - \hat{e}_{(i)}(x))\\
+(1 - w_{i,i}) ( y_i - \hat{e}_{(i)}(x))  &= y_i - \hat{e}_(x)\\
+y_i - \hat{e}_{(i)}(x)  &= \frac{y_i - \hat{e}_(x)}{1-w_{i,i}}\\
+\end{align*}
+
+So it follows
+
+\begin{gather*}
+\frac{1}{n} \sum\limits_{i=1}^n (y_i - \hat{e}(x_i))^2  =  \frac{1}{n} \sum\limits_{i=1}^n \left( \frac{y_i - \hat{e}_{(i)}(x_i)} {1-w_{n,1}(x_i)} \right)^2
+\end{gather*}
+
+\subsection{}
+
+If we assume the data is iid and a finite first moment, we can show consistency:
+
+\begin{align*}
+\E[\hat{e}(x) | x] &= \E\left[\qsum w_{n,i}(x_i)y_i\right]\\
+&= \qsum w_{n,i}(x_i)\E[y_i | x ]\\
+&= \E[y_i | x ]\\
+\end{align*}
+
+as $ \qsum w_{n,i}(x_i) = 1 $
+
+
+Now if we assume a finite second moment of our regressor estimator
+
+\begin{align*}
+\V[\hat{e}(x) | x] &= \V \left[\qsum w_{n,i}(x_i)y_i\right]\\
+&= \qsum \V[w_{n,i}(x_i)y_i | x ]\\
+&= \qsum w_{n,i}(x_i)^2 \V[y_i | x ]\\
+&= \V[y_i | x ] \qsum w_{n,i}(x_i)^2 \\
+\end{align*}
+
+
+So the variance estimator is
+
+\begin{align*}
+\hat{V}&(x) = \left(\frac{1}{1-n} \qsum (y_i - \hat{e}(x_i))^2 \right) \left( \qsum w_{n,i}(x_i)^2\right)
+\end{align*}
+
+Asymptotic normality follows from the CLT
+
+\subsection{}
+
+The
+
+A pointwise asymptotically valid confidence interval for a fixed x is
+
+\begin{gather*}
+CI_{95} = \left[\hat{e}(x)  - 1.96  \sqrt{\hat{V}(x) / n}  ; \hat{e}(x)  + 1.96  \sqrt{\hat{V}(x) / n}  \right]
+\end{gather*}
+
+but this convidence invterval is not asymptotically valid across the entire support. In order for the confidence interval to be uniformly aymptotically valid we need the interval to hold across the entire support of x
+
+\begin{gather*}
+  \text{sup}_{x\in X} \left| \frac{\hat{e}(x) - e(x))}{\sqrt{\hat{V}(x)}} \right| \leq q_{1-\alpha/2}
+\end{gather*}
 
 
 
