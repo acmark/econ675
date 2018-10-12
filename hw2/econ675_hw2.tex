@@ -134,16 +134,48 @@ h_{AIMSE,s} = \left( \frac{(1+2s)  (P!)^2     }{2Pn}     \frac{\nu_s(k)}{  \mu_p
 \end{gather*}
 
 
-Now for a consistent bandwith estimator we use cross validation procedure from the lecture notes.
+Now for a consistent bandwith estimator we use cross validation procedure from the lecture notes. Cross-Validation minimizes the estimated mean-squared error through a choice of bandwith.
+
 \begin{gather*}
-\hat{h}_{AIMSE,s} = \left( \frac{(1+2s)  (P!)^2     }{2Pn}     \frac{\hat{\nu}_s(k)}{  \hat{\mu}_p(k)^2 \hat{\nu}_{(P+s)}(f))} \right)^{\frac{1}{1-2P-2s}}\\
+h^* = \text{argmin}_{h \in \R^{++}} \text{   } CV(h) = \frac{1}{n^2h} \sum\limits_{i=1}^n \sum\limits_{j=1}^n K\left( \frac{X_i - X_j}{h}\right) K\left( \frac{X_i - X_j}{h} \right) - \frac{2}{n} \sum\limits_{i=1}^n \hat{f}_{-i}(X_i)
 \end{gather*}
 
-where
+where $\hat{f}_{-i}(X_i)$ is the estimated density w/o $x_i$ in the sample.
+
+\subsection{}
+\subsubsection{}
+
+PUT GRAPHS HERE
+
+
+
+
+
+
+
+\subsubsection{}
+
+
+Talk about convergence here!!!!
+
+
+
+
+\subsubsection
+Considering a rule-of-thumbs estimate of the bandwith, we assume the DGP is gaussian, so
+
 \begin{gather*}
-\hat{\nu}_s(k) = \frac{1}{n}\sum\limits_{i=1}^N k^{(s)}(X_i)^2
+\bar{h}_{AIMSE} = M^{-1} \sum_{m=1}^M  \hat{h}_{AIMSE,m} =
 \end{gather*}
-?????
+
+
+
+
+
+
+
+
+
 
 \newpage
 \section{Linear Smoothing, Cross-Validation and Series}
@@ -152,26 +184,102 @@ where
 Local polynomial regression solves the following problem:
 
 \begin{gather*}
-\hat{\beta} =  \text{argmin}_{\beta \in \R^P+1} \text{    } \frac{1}{n}\sum\limits_{i=1}^N \left(Y_i - r_p(x-x_0)\beta  \right)^2 K(\frac{x_i - x}{h})
+\hat{\beta}_{LPR} =  \text{argmin}_{\beta \in \R^P+1} \text{    } \frac{1}{n}\sum\limits_{i=1}^N \left(Y_i - r_p(x-x)\beta  \right)^2 K(\frac{x_i - x}{h})
 \end{gather*}
 
-where $ r_p(u) =(1,u,u^2,...,u^p)' $ which can be rewritten as a weighted least-squares problem where $ \hat{\beta}(x) = \mathbf{ (R_p' W R_p)^{-1} R_p'WY }$  where the weighting matrix is a diagonal matrix with the kernel functions of the $ x_i $ s  the derivative kernel estimators s.t.
+where $ r_p(u) =(1,u,u^2,...,u^p)' $ The true regression function $e(x_i)$ is estimated by $\hat{e}(x) = \hat{\beta}_{LPR}$, which can be rewritten as a weighted least-squares problem where $ \hat{\beta}_{LPR}(x) = \mathbf{ (R_p' W R_p)^{-1} R_p'WY } $  where the weighting matrix is a diagonal matrix with the kernel functions of the $ x_i $.
 
-note $\hat{e}(x) = \frac{\hat{m}(x)}{\hat{f}(x)}$
+where
 
-$ WY = \sum\limits_{i=1}^N K(\frac{x_i - x}{h}) y_i$
+\begin{gather*}
+\mathbf{R}_p = \begin{bmatrix}
+1 & (x_1 - x) & (x_1 - x)^2 & \cdots & (x_1 - x)^p \\
+\vdots & \cdots & \ddots & \ddots & \vdots \\
+1 & (x_n - x) & \cdots & \cdots & (x_n - x)^p \\
+\end{bmatrix}
+\end{gather*}
+
+and $\mathbf{W}$ is a matrix with kernel weights of $x_i$s on the diagonal
+
+\begin{gather*}
+\mathbf{W}  = \begin{bmatrix}
+K(\frac{x_1 - x}{h}) & 0 & 0 & 0 \\
+0 & K(\frac{x_2 - x}{h}) & 0 & 0 \\
+0 & 0 & \ddots & 0 \\
+0 & 0 & 0 & K(\frac{x_n - x}{h})  \\
+\end{bmatrix}
+\end{gather*}
+
+So we can rewrite the estimator of our regression equation as
+
+$\hat{e}(x) = \mathbf{e_1'}\hat{beta_{LPR}} = R_p' W R_p)^{-1} R_p'WY$
+
+where $\mathbf{e_1}$ is a basis vector of length $1+p$.
+
+Therefore we can rewrite the estimator above as a sum.
+\begin{gather*}
+\hat{e}(x) = \mathbf{e_1'}\left(\sum\limits_{i=1}^n r_p(x_i-x)r_p(x_i-x)'K\left(\frac{x_i - x}{h}\right)\right)^{-1} \left( \sum\limits_{i=1}^n r_p(x_i-x)r_p(x_i-x)y_iK\left(\frac{x_i - x}{h}\right) \right)
+\end{gather*}
+
+
+
+
+
 
 
 Now we consider the series estimator, which solves the following problem
 \begin{gather*}
-\hat{\beta} =  \text{argmin}_{\beta \in \R^{k_n}} \text{    } \frac{1}{n}\sum\limits_{i=1}^N \left(Y_i - r_{k_n}(x)\beta  \right)^2 K(\frac{x_i - x}{h})
+\hat{\beta_s} =  \text{argmin}_{\beta \in \R^{k_n}} \text{    } \frac{1}{n}\sum\limits_{i=1}^N \left(Y_i - r_{k_n}(x)\beta  \right)^2 K(\frac{x_i - x}{h})
 \end{gather*}
 
 where $r_{k_n}(x)$ is the basis of some series defined on x, so that
 
 \begin{gather*}
-\hat{e}(x) = r_{k_n}(x)'\hat{\beta} =
+\hat{e}(x) = \mathbf{r_{k_n}(x)'\hat{\beta}}
 \end{gather*}
+
+where
+
+\begin{gather*}
+\mathbf{\hat{beta}_s} = \mathbf{\left( R_p'R_p \right)^{-1}R_pY}
+\end{gather*}
+
+and
+
+\begin{gather*}
+\mathbf{R}_p = \begin{bmatrix}
+1 & x_1 & x_1^2 & \cdots & x_1^p \\
+\vdots & \cdots & \ddots & \ddots & \vdots \\
+1 & x_n & \cdots & \cdots & x_n^p \\
+\end{bmatrix}
+\end{gather*}
+
+So we can rewrite the estimated regression function as
+
+\begin{gather*}
+\hat{e}(x) = \mathbf{r_p(x)'\left( R_p'R_p \right)^{-1}R_pY}
+\end{gather*}
+
+and
+
+\begin{gather*}
+\hat{e}(x) = \mathbf{r_p(x)'} \left(\sum\limits_{i=1}^n r_p(x_i)r_p(x_i)'\right)^{-1} \left( \sum\limits_{i=1}^n r_p(x_i)y_i\right)
+\end{gather*}
+
+
+\subsection{}
+
+Next, we need to show the following simplified cross-validation formula holds for local polynomial regression and series estimation:
+
+\begin{gather*}
+CV(c) = \frac{1}{n} \sum\limits_{i=1}^n (y_i - \hat{e}(x_i))^2  =  \frac{1}{n} \sum\limits_{i=1}^n \left( \frac{y_i - \hat{e}_{(i)}(x_i)} {1-w_{n,1}(x_i)} \right)^2
+\end{gather*}
+
+where c is a tuning parameter ($h_n$ for LPR or a truncation K for series estimators)
+
+
+
+
 
 
 \newpage

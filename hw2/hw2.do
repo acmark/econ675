@@ -13,7 +13,7 @@ log using $resdir\pset2_stata.smcl, replace
 *******
 *** Problem 1 
 *******
-/*
+
    set obs 10000
    timer on 1
    program IMSEsim, rclass
@@ -39,15 +39,16 @@ log using $resdir\pset2_stata.smcl, replace
 
 
 
-   simulate IMSE_LI=r(data1) IMSE_L0 = r(data2), reps(1) nodots: IMSEsim
+   simulate IMSE_LI=r(data1) IMSE_L0 = r(data2), reps(1000) nodots: IMSEsim
    timer off 1
    timer list
-*/
 
 
 
 
 
+
+/*
 **************
 **** Problem 2 
 **************
