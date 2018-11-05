@@ -1,0 +1,188 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}/Users/erinmarkiewitz/Dropbox/Phd_Coursework/Econ675/hw4\results\pset4_stata.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res} 5 Nov 2018, 17:55:03
+{txt}
+{com}. 
+. ****
+. * Question 1
+. ****
+. ****
+. * Question 2
+. ****
+. 
+. ****
+. * Question 3
+. ****
+. clear all
+{res}{txt}
+{com}. set seed 12345 
+{txt}
+{com}. 
+. *construct dgp variance covariance matrix 
+. matrix P = (1,.85 \.85, 1)
+{txt}
+{com}. mat A = cholesky(P)
+{txt}
+{com}. 
+. program modelsim, rclass
+{txt}  1{com}.         args A
+{txt}  2{com}.         drop _all 
+{txt}  3{com}.         set obs 50
+{txt}  4{com}. 
+.         *generate component normal variables 
+.         gen c1= invnorm(uniform())
+{txt}  5{com}.         gen c2= invnorm(uniform())
+{txt}  6{com}. 
+.         *use cholesky decomp to back out x,z 
+.         gen x = `A'[1,1] * c1 + `A'[1,2] * c2
+{txt}  7{com}.         gen z = `A'[2,1] * c1 + `A'[2,2] * c2
+{txt}  8{com}. 
+.         *general epsilon and outcome variable 
+.         gen e= invnorm(uniform())
+{txt}  9{com}.         gen y = 0.5*x + z + e 
+{txt} 10{com}. 
+. 
+.         *simulate model selection process (flip order of regs for speed) 
+.         reg y x 
+{txt} 11{com}.         scalar beta_tilde = _b[x]
+{txt} 12{com}.         
+.         reg y x z 
+{txt} 13{com}.         scalar beta_hat = _b[x]
+{txt} 14{com}. 
+. 
+.         if abs(_b[z]/_se[z])>=1.96 {c -(}
+{txt} 15{com}.                 scalar beta_check = beta_hat
+{txt} 16{com}.         {c )-}
+{txt} 17{com}.         else{c -(}
+{txt} 18{com}.                 scalar beta_check = beta_tilde
+{txt} 19{com}.         {c )-}
+{txt} 20{com}.         
+. end
+{txt}
+{com}. 
+. simulate beta_hat = beta_hat beta_check=beta_check beta_tilde=beta_tilde, ///
+> seed(1234) reps(1000): modelsim A
+{p2colset 7 17 21 2}{...}
+
+{txt}{p2col :command:}modelsim A{p_end}
+{p2colset 6 17 21 2}{...}
+{p2col :beta_hat:}{res:beta_hat}{p_end}
+{p2colset 4 17 21 2}{...}
+{p2col :beta_check:}{res:beta_check}{p_end}
+{p2colset 4 17 21 2}{...}
+{p2col :beta_tilde:}{res:beta_tilde}{p_end}
+
+Simulations ({res}1000{txt})
+{hline 4}{c +}{hline 3} 1 {hline 3}{c +}{hline 3} 2 {hline 3}{c +}{hline 3} 3 {hline 3}{c +}{hline 3} 4 {hline 3}{c +}{hline 3} 5 
+..................................................    50
+..................................................   100
+..................................................   150
+..................................................   200
+..................................................   250
+..................................................   300
+..................................................   350
+..................................................   400
+..................................................   450
+..................................................   500
+..................................................   550
+..................................................   600
+..................................................   650
+..................................................   700
+..................................................   750
+..................................................   800
+..................................................   850
+..................................................   900
+..................................................   950
+..................................................  1000
+
+{com}. 
+. **TODO: empircal coverage rate 
+. 
+. **
+. 
+. sum * 
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 4}beta_hat {c |}{res}      1,000    .5153213    .2900555  -.3544536   1.436695
+{txt}{space 2}beta_check {c |}{res}      1,000    .5415224    .3413071  -.3544536   1.705497
+{txt}{space 2}beta_tilde {c |}{res}      1,000    1.358649    .1663243   .8311836   1.950815
+{txt}
+{com}. estpost summarize *
+
+{txt}{space 0}{space 0}{ralign 12:}{space 1}{c |}{space 1}{ralign 9:e(count)}{space 1}{space 1}{ralign 9:e(sum_w)}{space 1}{space 1}{ralign 9:e(mean)}{space 1}{space 1}{ralign 9:e(Var)}{space 1}{space 1}{ralign 9:e(sd)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:beta_hat}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     1000}}}{space 1}{space 1}{ralign 9:{res:{sf:     1000}}}{space 1}{space 1}{ralign 9:{res:{sf: .5153213}}}{space 1}{space 1}{ralign 9:{res:{sf: .0841322}}}{space 1}{space 1}{ralign 9:{res:{sf: .2900555}}}{space 1}
+{space 0}{space 0}{ralign 12:beta_check}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     1000}}}{space 1}{space 1}{ralign 9:{res:{sf:     1000}}}{space 1}{space 1}{ralign 9:{res:{sf: .5415224}}}{space 1}{space 1}{ralign 9:{res:{sf: .1164905}}}{space 1}{space 1}{ralign 9:{res:{sf: .3413071}}}{space 1}
+{space 0}{space 0}{ralign 12:beta_tilde}{space 1}{c |}{space 1}{ralign 9:{res:{sf:     1000}}}{space 1}{space 1}{ralign 9:{res:{sf:     1000}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.358649}}}{space 1}{space 1}{ralign 9:{res:{sf: .0276638}}}{space 1}{space 1}{ralign 9:{res:{sf: .1663243}}}{space 1}
+
+{space 0}{space 0}{ralign 12:}{space 1}{c |}{space 1}{ralign 9:e(min)}{space 1}{space 1}{ralign 9:e(max)}{space 1}{space 1}{ralign 9:e(sum)}{space 1}
+{space 0}{hline 13}{c   +}{hline 11}{hline 11}{hline 11}
+{space 0}{space 0}{ralign 12:beta_hat}{space 1}{c |}{space 1}{ralign 9:{res:{sf:-.3544536}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.436695}}}{space 1}{space 1}{ralign 9:{res:{sf: 515.3213}}}{space 1}
+{space 0}{space 0}{ralign 12:beta_check}{space 1}{c |}{space 1}{ralign 9:{res:{sf:-.3544536}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.705497}}}{space 1}{space 1}{ralign 9:{res:{sf: 541.5224}}}{space 1}
+{space 0}{space 0}{ralign 12:beta_tilde}{space 1}{c |}{space 1}{ralign 9:{res:{sf: .8311836}}}{space 1}{space 1}{ralign 9:{res:{sf: 1.950815}}}{space 1}{space 1}{ralign 9:{res:{sf: 1358.649}}}{space 1}
+
+{com}. estout using hw4_q3_1_stata.tex, cells("mean sd min max") style(tex)  replace
+{res}{txt}(output written to {browse  `"hw4_q3_1_stata.tex"'})
+
+{com}. 
+. kdensity beta_hat, normal name(beta_hat,replace)
+{res}{txt}
+{com}. gr export hw4_q3_bhat_stata.png ,replace
+{txt}(file hw4_q3_bhat_stata.png written in PNG format)
+
+{com}. kdensity beta_check, normal name(beta_check,replace)
+{res}{txt}
+{com}. gr export hw4_q3_bcheck_stata.png ,replace
+{txt}(file hw4_q3_bcheck_stata.png written in PNG format)
+
+{com}. kdensity beta_tilde,normal name(beta_tilde,replace)
+{res}{txt}
+{com}. gr export hw4_q3_btilde_stata.png ,replace
+{txt}(file hw4_q3_btilde_stata.png written in PNG format)
+
+{com}. 
+. 
+. sum beta_hat
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 4}beta_hat {c |}{res}      1,000    .5153213    .2900555  -.3544536   1.436695
+{txt}
+{com}. gen cov_upper = r(mean) + 1.96*r(sd)/sqrt(50)
+{txt}
+{com}. gen cov_lower = r(mean) - 1.96*r(sd)/sqrt(50)
+{txt}
+{com}. gen covrate_hat =  cond(beta_hat<= cov_upper & beta_hat>= cov_lower,1,0)
+{txt}
+{com}. gen covrate_tilde =  cond(beta_tilde<= cov_upper & beta_tilde>= cov_lower,1,0)
+{txt}
+{com}. gen covrate_check  = cond(beta_check<= cov_upper & beta_check>= cov_lower,1,0)
+{txt}
+{com}. 
+. sum cov*
+
+{txt}    Variable {c |}        Obs        Mean    Std. Dev.       Min        Max
+{hline 13}{c +}{hline 57}
+{space 3}cov_upper {c |}{res}      1,000    .5957206           0   .5957206   .5957206
+{txt}{space 3}cov_lower {c |}{res}      1,000     .434922           0    .434922    .434922
+{txt}{space 1}covrate_hat {c |}{res}      1,000        .217    .4124089          0          1
+{txt}covrate_ti~e {c |}{res}      1,000           0           0          0          0
+{txt}covrate_ch~k {c |}{res}      1,000        .215    .4110279          0          1
+{txt}
+{com}. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. cap log close
+{smcl}
+{com}{sf}{ul off}
