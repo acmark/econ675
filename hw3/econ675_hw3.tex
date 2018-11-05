@@ -246,6 +246,7 @@ Constant       &    1.755024&    .1118828&    5.246883&    1.55e-07&1.099438,2.4
 \end{tabular}
 \end{table}
 
+The point estimates are consistent across software. The variances differ slightly. I have not found what is leading to the difference.
 
 \newpage
 \subsubsection{}
@@ -276,6 +277,7 @@ Constant       &    1.755024&    .1267694&    4.929193&    0 & 1.057185,2.452863
     \hline
 \end{tabular}
 
+The point estimates are consistent across software. The variances differ slightly. I have not found what is leading to the difference.
 
 
 
@@ -456,7 +458,32 @@ dpisofirme & -0.33 &  -0.52 & -0.17 \\
 \subsection{}
 
 \subsubsection{}
+By previous result and Woodridge thm 14.4, the optimal instrument is derived from the variance
+\begin{align*}
+  \mathbf{\Omega_0(x_i)} &= \V[s_i m(t_i,x_i)|x_i,t_i]\\
+  & = \E[s_i^2|x_i,t_i]F(t_i\theta+\mathbf{x_i'\gamma})(1-F(t_i\theta+\mathbf{x_i'\gamma})
+\end{align*}
+
+and
+
+\begin{align*}
+  \mathbf{M_0(x_i)} &=  \E[s_i^2|x_i,t_i]\E[m(t_i,\mathbf{x_i})]|\mathbf{x_i},t_i]
+\end{align*}
+
+Since $g_0(t_i,x_i) =  \mathbf{\Omega_0(x_i)^{-1}M_0(x_i)}$
+
+\begin{align*}
+  g_0\mathbf{(t_i,x_i)} = \frac{f(t_i\theta_0 + x_i\gamma_0)}{F(t_i \theta_0 + x_i\gamma_0)(1 - F(t_i \theta_0 + x_i\gamma_0))} [t_i,x_i']'
+\end{align*}
+
+
+
 \subsubsection{}
+
+
+You can estimate $\beta_{MAR}$ through straight forward GMM, using the method described above. $\hat\beta_{MAR}$ and $\tilde\beta_{MAR}$ are asymptotically both asymptotically equivalent since we assume the conditional independence of the missing outcome indicator. Thus, the asymptotic equivalence is relative immediate from the moment condition listed in the problem using the law of iterated expectations.
+
+That said, since the propensity score is unkown, additional variability is introduced through its estimation, thus it is safe to say that $\V^{Asy.} _{\hat\beta_{MAR}} \leq \V^{Asy.} _{\tilde\beta_{MAR}}$
 
 \subsubsection{}
 \textbf{Stata output:}\\
@@ -485,6 +512,7 @@ dpisofirme & -0.32  & -0.49 & -0.16  \\
    \hline
 \end{tabular}
 
+The estimates are consistent across software.
 
 \subsubsection{}
 \textbf{Stata output:}\\
@@ -513,18 +541,20 @@ dpisofirme  &    -.315488&-.4485709,-.1824051\\
 \hline
 \end{tabular}
 
+The point estimates are consistent across software. The variances differ slightly. I have not found what is leading to the difference. The results do not change a lot since the propensity scores of the sample are significantly far from 0.
+
 \newpage
 \section{When Bootstrap Fails}
 \subsection{}
 \includegraphics[totalheight=6cm]{hw3_Q3_1_stata.png}
 \includegraphics[totalheight=6cm]{hw3_q3_2_r.png}\\
 
-No, it does not coincide with the theoretical Exponential(1) distribution
+No, it does not coincide with the theoretical Exponential(1) distribution. The plots appear similar.
 \subsection{}
 \includegraphics[totalheight=6cm]{hw3_Q3_2_stata.png}
 \includegraphics[totalheight=6cm]{hw3_q3_3_r.png}\\
 
-Yes, it does coincide with the theoretical Exponential(1) distribution
+Yes, it does coincide with the theoretical Exponential(1) distribution. The plots appear similar.
 \subsection{}
 
 The intuitive reason behind why the nonparametic bootsstrap fails is that by this method $ \E[\max_i x^*_i] = \frac{2}{n}\qsum x_i \neq \max_i x_i$.

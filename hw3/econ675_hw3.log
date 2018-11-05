@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  29 OCT 2018 09:03
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2016.5.22)  30 OCT 2018 19:18
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -423,17 +423,17 @@ Underfull \hbox (badness 10000) in paragraph at lines 222--235
  []
 
 [7]
-Underfull \hbox (badness 10000) in paragraph at lines 252--253
+Underfull \hbox (badness 10000) in paragraph at lines 253--254
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 265--266
+Underfull \hbox (badness 10000) in paragraph at lines 266--267
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 284--285
+Underfull \hbox (badness 10000) in paragraph at lines 286--287
 
  []
 
@@ -441,85 +441,85 @@ Underfull \hbox (badness 10000) in paragraph at lines 284--285
 File: hw3_q1_9a_stata.png Graphic file (type png)
 
 <use hw3_q1_9a_stata.png>
-Package pdftex.def Info: hw3_q1_9a_stata.png used on input line 286.
+Package pdftex.def Info: hw3_q1_9a_stata.png used on input line 288.
 (pdftex.def)             Requested size: 352.27805pt x 256.0748pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 286--287
+Underfull \hbox (badness 10000) in paragraph at lines 288--289
 
  []
 
 [8 <./hw3_q1_9a_stata.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 288--289
+Underfull \hbox (badness 10000) in paragraph at lines 290--291
 
  []
 
 <hw3_q1_9c_r.png, id=44, 481.8pt x 481.8pt>
 File: hw3_q1_9c_r.png Graphic file (type png)
  <use hw3_q1_9c_r.png>
-Package pdftex.def Info: hw3_q1_9c_r.png used on input line 290.
+Package pdftex.def Info: hw3_q1_9c_r.png used on input line 292.
 (pdftex.def)             Requested size: 256.0806pt x 256.0748pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 290--291
+Underfull \hbox (badness 10000) in paragraph at lines 292--293
 
  []
 
 [9
 
  <./hw3_q1_9c_r.png>] [10] [11]
-Underfull \hbox (badness 10000) in paragraph at lines 429--430
+Underfull \hbox (badness 10000) in paragraph at lines 431--432
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 443--444
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 462--463
+Underfull \hbox (badness 10000) in paragraph at lines 445--446
 
  []
 
 [12]
-Underfull \hbox (badness 10000) in paragraph at lines 490--491
+Underfull \hbox (badness 10000) in paragraph at lines 489--490
 
  []
 
-[13] <hw3_Q3_1_stata.png, id=62, 793.96625pt x 577.15625pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 518--519
+
+ []
+
+[13] [14] <hw3_Q3_1_stata.png, id=65, 793.96625pt x 577.15625pt>
 File: hw3_Q3_1_stata.png Graphic file (type png)
 
 <use hw3_Q3_1_stata.png>
-Package pdftex.def Info: hw3_Q3_1_stata.png used on input line 519.
+Package pdftex.def Info: hw3_Q3_1_stata.png used on input line 549.
 (pdftex.def)             Requested size: 234.84799pt x 170.71652pt.
- <hw3_q3_2_r.png, id=63, 481.8pt x 481.8pt>
+ <hw3_q3_2_r.png, id=66, 481.8pt x 481.8pt>
 File: hw3_q3_2_r.png Graphic file (type png)
 
 <use hw3_q3_2_r.png>
-Package pdftex.def Info: hw3_q3_2_r.png used on input line 520.
+Package pdftex.def Info: hw3_q3_2_r.png used on input line 550.
 (pdftex.def)             Requested size: 170.71304pt x 170.71652pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 519--521
+Underfull \hbox (badness 10000) in paragraph at lines 549--551
 
  []
 
-<hw3_Q3_2_stata.png, id=64, 793.96625pt x 577.15625pt>
+<hw3_Q3_2_stata.png, id=67, 793.96625pt x 577.15625pt>
 File: hw3_Q3_2_stata.png Graphic file (type png)
 
 <use hw3_Q3_2_stata.png>
-Package pdftex.def Info: hw3_Q3_2_stata.png used on input line 524.
+Package pdftex.def Info: hw3_Q3_2_stata.png used on input line 554.
 (pdftex.def)             Requested size: 234.84799pt x 170.71652pt.
- <hw3_q3_3_r.png, id=65, 481.8pt x 481.8pt>
+ <hw3_q3_3_r.png, id=68, 481.8pt x 481.8pt>
 File: hw3_q3_3_r.png Graphic file (type png)
 
 <use hw3_q3_3_r.png>
-Package pdftex.def Info: hw3_q3_3_r.png used on input line 525.
+Package pdftex.def Info: hw3_q3_3_r.png used on input line 555.
 (pdftex.def)             Requested size: 170.71304pt x 170.71652pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 524--526
+Underfull \hbox (badness 10000) in paragraph at lines 554--556
 
  []
 
-[14 <./hw3_Q3_1_stata.png> <./hw3_q3_2_r.png> <./hw3_Q3_2_stata.png> <./hw3_q3_
+[15 <./hw3_Q3_1_stata.png> <./hw3_q3_2_r.png> <./hw3_Q3_2_stata.png> <./hw3_q3_
 3_r.png>] (./hw3.do
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 3.
 
@@ -551,13 +551,13 @@ Overfull \hbox (9.84431pt too wide) in paragraph at lines 81--82
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-[15]
+[16]
 Overfull \hbox (58.24425pt too wide) in paragraph at lines 112--113
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
 
  []
 
-) (./hw3_q1.R [16]) (./hw3_q2.R [17]
+) (./hw3_q1.R [17]) (./hw3_q2.R [18]
 Overfull \hbox (150.64412pt too wide) in paragraph at lines 54--55
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
 ] 
@@ -605,7 +605,7 @@ Overfull \hbox (150.64412pt too wide) in paragraph at lines 100--101
 ] 
  []
 
-[18]
+[19]
 Overfull \hbox (150.64412pt too wide) in paragraph at lines 102--103
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][
 ] 
@@ -647,12 +647,12 @@ Overfull \hbox (75.84422pt too wide) in paragraph at lines 172--173
 ][][][][][][][][][][][][][][][][] 
  []
 
-) (./hw3_q3.R [19]
+) (./hw3_q3.R [20]
 Overfull \hbox (133.04414pt too wide) in paragraph at lines 64--65
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-) [20] (./econ675_hw3.aux) ) 
+) [21] (./econ675_hw3.aux) ) 
 Here is how much of TeX's memory you used:
  6013 strings out of 493014
  86959 string characters out of 6133351
@@ -676,10 +676,10 @@ y10.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
 6.pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.
 pfb></usr/local/texlive/2016/texmf-dist/fonts/type1/public/amsfonts/symbols/msb
 m10.pfb>
-Output written on econ675_hw3.pdf (20 pages, 399602 bytes).
+Output written on econ675_hw3.pdf (21 pages, 403035 bytes).
 PDF statistics:
- 138 PDF objects out of 1000 (max. 8388607)
- 89 compressed objects within 1 object stream
+ 141 PDF objects out of 1000 (max. 8388607)
+ 91 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  31 words of extra memory for PDF output out of 10000 (max. 10000000)
 

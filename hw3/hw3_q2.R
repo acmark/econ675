@@ -174,8 +174,8 @@ for (i in 1:4) {
   table6[i, 6] <- 2 * temp$t0[i] - quantile(temp$t[, i], 0.025)
 }
 
-rownames(table5)=c("dpisofirme", "S_age","S_HHpeople","log_inc")
-colnames(table5)=c("Estimate", "Std.Error", "t", "p-value", "CI.lower","CI.upper")
+rownames(table6)=c("dpisofirme", "S_age","S_HHpeople","log_inc")
+colnames(table6)=c("Estimate", "Std.Error", "t", "p-value", "CI.lower","CI.upper")
 
 xtable(table6,digits=3)
 print(xtable(table6, type = "latex"), file = "hw3_q2_3d_r.tex")
