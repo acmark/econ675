@@ -14,9 +14,12 @@ log using $resdir\pset4_stata.smcl, replace
 ****
 * Question 1
 ****
+
+
 ****
 * Question 2
 ****
+/*
 clear all
 set seed 12345
 scalar n1 = 185
@@ -135,7 +138,12 @@ local count = `base_count'
 foreach cv in a b c { 
 di "`covars_`cv''"
 di "`num'"
-teffects ipw (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', ate
+capture teffects ipw (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', ate osample(otest) iter(50)
+ if _rc==498 {
+               display "Overlap Assumption Violated"
+			   teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, ate iter(50)
+}
+drop otest
 local colnmsb: coln e(b)
 local colnmsv: coln e(V)
 local colb: word 1 of `colnmsb'
@@ -145,7 +153,12 @@ mat ate`num'[`count',2] = _se[`colv']
 mat ate`num'[`count',3] = ate`num'[`count',1] - ate`num'[`count',2] * 1.96
 mat ate`num'[`count',4] = ate`num'[`count',1] + ate`num'[`count',2] * 1.96
 
-teffects ipw (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', atet
+capture teffects ipw (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', atet osample(otest) iter(50)
+ if _rc==498 {
+               display "Overlap Assumption Violated"
+			    teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, atet iter(50)
+}
+drop otest
 local colnmsb: coln e(b)
 local colnmsv: coln e(V)
 local colb: word 1 of `colnmsb'
@@ -154,26 +167,142 @@ mat att`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatmen
 mat att`num'[`count',2] = _se[`colv']
 mat att`num'[`count',3] = att`num'[`count',1] - att`num'[`count',2] * 1.96
 mat att`num'[`count',4] = att`num'[`count',1] + att`num'[`count',2] * 1.96
+
+
+local ++count 
+}
+}
+
+
+*DR 
+local base_count = `count' 
+foreach num of numlist 0 2 { 
+local count = `base_count'
+
+foreach cv in a b c { 
+di "`covars_`cv''"
+di "`num'"
+capture teffects ipwra (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', ate osample(otest) iter(50)
+ if _rc==498 {
+               display "Overlap Assumption Violated"
+			   teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, ate iter(50)
+}
+drop otest
+local colnmsb: coln e(b)
+local colnmsv: coln e(V)
+local colb: word 1 of `colnmsb'
+local colv: word 1 of `colnmsv'
+mat ate`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+mat ate`num'[`count',2] = _se[`colv']
+mat ate`num'[`count',3] = ate`num'[`count',1] - ate`num'[`count',2] * 1.96
+mat ate`num'[`count',4] = ate`num'[`count',1] + ate`num'[`count',2] * 1.96
+
+capture teffects ipwra (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', atet osample(otest) iter(50)
+ if _rc==498 {
+               display "Overlap Assumption Violated"
+			    teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, atet iter(50)
+}
+drop otest
+local colnmsb: coln e(b)
+local colnmsv: coln e(V)
+local colb: word 1 of `colnmsb'
+local colv: word 1 of `colnmsv'
+mat att`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+mat att`num'[`count',2] = _se[`colv']
+mat att`num'[`count',3] = att`num'[`count',1] - att`num'[`count',2] * 1.96
+mat att`num'[`count',4] = att`num'[`count',1] + att`num'[`count',2] * 1.96
+
+
+local ++count 
+}
+}
+
+
+*Reg. Impute
+local base_count = `count' 
+foreach num of numlist 0 2 { 
+local count = `base_count'
+
+foreach cv in a b c { 
+di "`covars_`cv''"
+di "`num'"
+teffects nnmatch (re78 `covars_`cv'') (treat) if treat ==1 | treat == `num', ate nneighbor(1) metric(maha)
+local colnmsb: coln e(b)
+local colnmsv: coln e(V)
+local colb: word 1 of `colnmsb'
+local colv: word 1 of `colnmsv'
+mat ate`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+mat ate`num'[`count',2] = _se[`colv']
+mat ate`num'[`count',3] = ate`num'[`count',1] - ate`num'[`count',2] * 1.96
+mat ate`num'[`count',4] = ate`num'[`count',1] + ate`num'[`count',2] * 1.96
+
+teffects nnmatch (re78 `covars_`cv'') (treat) if treat ==1 | treat == `num', atet nneighbor(1) metric(maha)
+local colnmsb: coln e(b)
+local colnmsv: coln e(V)
+local colb: word 1 of `colnmsb'
+local colv: word 1 of `colnmsv'
+mat att`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+mat att`num'[`count',2] = _se[`colv']
+mat att`num'[`count',3] = att`num'[`count',1] - att`num'[`count',2] * 1.96
+mat att`num'[`count',4] = att`num'[`count',1] + att`num'[`count',2] * 1.96
+
+local ++count 
+}
+}
+
+*PS Matching 
+local base_count = `count' 
+foreach num of numlist 0 2 { 
+local count = `base_count'
+
+foreach cv in a b c { 
+di "`covars_`cv''"
+di "`num'"
+capture teffects psmatch (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', ate osample(otest) iter(50)
+ if _rc==498 {
+               display "Overlap Assumption Violated"
+			   teffects psmatch (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, ate iter(50)
+}
+cap drop otest
+local colnmsb: coln e(b)
+local colnmsv: coln e(V)
+local colb: word 1 of `colnmsb'
+local colv: word 1 of `colnmsv'
+mat ate`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+mat ate`num'[`count',2] = _se[`colv']
+mat ate`num'[`count',3] = ate`num'[`count',1] - ate`num'[`count',2] * 1.96
+mat ate`num'[`count',4] = ate`num'[`count',1] + ate`num'[`count',2] * 1.96
+
+capture teffects psmatch (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', atet osample(otest) iter(50)
+ if _rc==498 {
+               display "Overlap Assumption Violated"
+			    teffects psmatch (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, atet iter(50)
+}
+cap drop otest
+local colnmsb: coln e(b)
+local colnmsv: coln e(V)
+local colb: word 1 of `colnmsb'
+local colv: word 1 of `colnmsv'
+mat att`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+mat att`num'[`count',2] = _se[`colv']
+mat att`num'[`count',3] = att`num'[`count',1] - att`num'[`count',2] * 1.96
+mat att`num'[`count',4] = att`num'[`count',1] + att`num'[`count',2] * 1.96
+
+
 local ++count 
 }
 }
 
 
 
-
-
+mat li ate0
 mat li ate2
 
-mat li ate0
+mat li att0
+mat li att2
+**TODO: put into charts 
 
-
-
-
-
-
-
-
-
+*/
 
 
 ****

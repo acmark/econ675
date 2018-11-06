@@ -3,7 +3,7 @@
       name:  {res}<unnamed>
        {txt}log:  {res}/Users/erinmarkiewitz/Dropbox/Phd_Coursework/Econ675/hw4\results\pset4_stata.smcl
   {txt}log type:  {res}smcl
- {txt}opened on:  {res} 6 Nov 2018, 11:40:24
+ {txt}opened on:  {res} 6 Nov 2018, 13:04:29
 {txt}
 {com}. 
 . ****
@@ -626,7 +626,995 @@ Warning: convergence not achieved
 . foreach cv in a b c {c -(} 
 {txt}  4{com}. di "`covars_`cv''"
 {txt}  5{com}. di "`num'"
-{txt}  6{com}. teffects ipw (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', ate
+{txt}  6{com}. capture teffects ipw (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', ate osample(otest) iter(50)
+{txt}  7{com}.  if _rc==498 {c -(}
+{txt}  8{com}.                display "Overlap Assumption Violated"
+{txt}  9{com}.                            teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, ate iter(50)
+{txt} 10{com}. {c )-}
+{txt} 11{com}. drop otest
+{txt} 12{com}. local colnmsb: coln e(b)
+{txt} 13{com}. local colnmsv: coln e(V)
+{txt} 14{com}. local colb: word 1 of `colnmsb'
+{txt} 15{com}. local colv: word 1 of `colnmsv'
+{txt} 16{com}. mat ate`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+{txt} 17{com}. mat ate`num'[`count',2] = _se[`colv']
+{txt} 18{com}. mat ate`num'[`count',3] = ate`num'[`count',1] - ate`num'[`count',2] * 1.96
+{txt} 19{com}. mat ate`num'[`count',4] = ate`num'[`count',1] + ate`num'[`count',2] * 1.96
+{txt} 20{com}. 
+. capture teffects ipw (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', atet osample(otest) iter(50)
+{txt} 21{com}.  if _rc==498 {c -(}
+{txt} 22{com}.                display "Overlap Assumption Violated"
+{txt} 23{com}.                             teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, atet iter(50)
+{txt} 24{com}. {c )-}
+{txt} 25{com}. drop otest
+{txt} 26{com}. local colnmsb: coln e(b)
+{txt} 27{com}. local colnmsv: coln e(V)
+{txt} 28{com}. local colb: word 1 of `colnmsb'
+{txt} 29{com}. local colv: word 1 of `colnmsv'
+{txt} 30{com}. mat att`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+{txt} 31{com}. mat att`num'[`count',2] = _se[`colv']
+{txt} 32{com}. mat att`num'[`count',3] = att`num'[`count',1] - att`num'[`count',2] * 1.96
+{txt} 33{com}. mat att`num'[`count',4] = att`num'[`count',1] + att`num'[`count',2] * 1.96
+{txt} 34{com}. 
+. 
+. local ++count 
+{txt} 35{com}. {c )-}
+{txt} 36{com}. {c )-}
+age educ black hisp  married nodegr log_re74 log_re75
+0
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75
+0
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75 age3 black_u74 educ_log_re74
+0
+age educ black hisp  married nodegr log_re74 log_re75
+2
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 1.472e-21}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 1.464e-21}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+convergence not achieved
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     2,163
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATE          {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 13968.14{col 26}{space 2} 2444.091{col 37}{space 1}    5.72{col 46}{space 3}0.000{col 54}{space 4} 9177.806{col 67}{space 3} 18758.47
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 3699.767{col 26}{space 2} 2387.246{col 37}{space 1}    1.55{col 46}{space 3}0.121{col 54}{space 4}-979.1493{col 67}{space 3} 8378.682
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+convergence not achieved
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     2,163
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATET         {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 15629.73{col 26}{space 2} 2476.655{col 37}{space 1}    6.31{col 46}{space 3}0.000{col 54}{space 4} 10775.58{col 67}{space 3} 20483.89
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 3521.064{col 26}{space 2} 2456.419{col 37}{space 1}    1.43{col 46}{space 3}0.152{col 54}{space 4}-1293.428{col 67}{space 3} 8335.556
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75
+2
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+convergence not achieved
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     1,789
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATE          {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 1944.963{col 26}{space 2} 4083.296{col 37}{space 1}    0.48{col 46}{space 3}0.634{col 54}{space 4} -6058.15{col 67}{space 3} 9948.076
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 12519.94{col 26}{space 2} 3904.752{col 37}{space 1}    3.21{col 46}{space 3}0.001{col 54}{space 4} 4866.764{col 67}{space 3} 20173.11
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+convergence not achieved
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     1,789
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATET         {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 3087.622{col 26}{space 2} 4563.719{col 37}{space 1}    0.68{col 46}{space 3}0.499{col 54}{space 4}-5857.103{col 67}{space 3} 12032.35
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 13763.12{col 26}{space 2} 4560.062{col 37}{space 1}    3.02{col 46}{space 3}0.003{col 54}{space 4} 4825.558{col 67}{space 3} 22700.67
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75 age3 black_u74 educ_log_re74
+2
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+convergence not achieved
+{err}convergence not achieved
+{txt}{p 4 4 2}The Gauss-Newton stopping criterion has been met but missing standard errors indicate some of the parameters are not identified.{p_end}
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     1,942
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATE          {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 3208.924{col 26}{space 2}        .{col 37}{space 1}       .{col 46}{space 3}    .{col 54}{space 4}        .{col 67}{space 3}        .
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 12739.73{col 26}{space 2}        .{col 37}{space 1}       .{col 46}{space 3}    .{col 54}{space 4}        .{col 67}{space 3}        .
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 2.104e-17}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 2.104e-17}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 2.104e-17}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+convergence not achieved
+{err}convergence not achieved
+{txt}{p 4 4 2}The Gauss-Newton stopping criterion has been met but missing standard errors indicate some of the parameters are not identified.{p_end}
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     1,942
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATET         {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 4220.958{col 26}{space 2}        .{col 37}{space 1}       .{col 46}{space 3}    .{col 54}{space 4}        .{col 67}{space 3}        .
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 14237.62{col 26}{space 2} 309.0848{col 37}{space 1}   46.06{col 46}{space 3}0.000{col 54}{space 4} 13631.82{col 67}{space 3} 14843.41
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+
+{com}. 
+. 
+. *DR 
+. local base_count = `count' 
+{txt}
+{com}. foreach num of numlist 0 2 {c -(} 
+{txt}  2{com}. local count = `base_count'
+{txt}  3{com}. 
+. foreach cv in a b c {c -(} 
+{txt}  4{com}. di "`covars_`cv''"
+{txt}  5{com}. di "`num'"
+{txt}  6{com}. capture teffects ipwra (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', ate osample(otest) iter(50)
+{txt}  7{com}.  if _rc==498 {c -(}
+{txt}  8{com}.                display "Overlap Assumption Violated"
+{txt}  9{com}.                            teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, ate iter(50)
+{txt} 10{com}. {c )-}
+{txt} 11{com}. drop otest
+{txt} 12{com}. local colnmsb: coln e(b)
+{txt} 13{com}. local colnmsv: coln e(V)
+{txt} 14{com}. local colb: word 1 of `colnmsb'
+{txt} 15{com}. local colv: word 1 of `colnmsv'
+{txt} 16{com}. mat ate`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+{txt} 17{com}. mat ate`num'[`count',2] = _se[`colv']
+{txt} 18{com}. mat ate`num'[`count',3] = ate`num'[`count',1] - ate`num'[`count',2] * 1.96
+{txt} 19{com}. mat ate`num'[`count',4] = ate`num'[`count',1] + ate`num'[`count',2] * 1.96
+{txt} 20{com}. 
+. capture teffects ipwra (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', atet osample(otest) iter(50)
+{txt} 21{com}.  if _rc==498 {c -(}
+{txt} 22{com}.                display "Overlap Assumption Violated"
+{txt} 23{com}.                             teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, atet iter(50)
+{txt} 24{com}. {c )-}
+{txt} 25{com}. drop otest
+{txt} 26{com}. local colnmsb: coln e(b)
+{txt} 27{com}. local colnmsv: coln e(V)
+{txt} 28{com}. local colb: word 1 of `colnmsb'
+{txt} 29{com}. local colv: word 1 of `colnmsv'
+{txt} 30{com}. mat att`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+{txt} 31{com}. mat att`num'[`count',2] = _se[`colv']
+{txt} 32{com}. mat att`num'[`count',3] = att`num'[`count',1] - att`num'[`count',2] * 1.96
+{txt} 33{com}. mat att`num'[`count',4] = att`num'[`count',1] + att`num'[`count',2] * 1.96
+{txt} 34{com}. 
+. 
+. local ++count 
+{txt} 35{com}. {c )-}
+{txt} 36{com}. {c )-}
+age educ black hisp  married nodegr log_re74 log_re75
+0
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75
+0
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75 age3 black_u74 educ_log_re74
+0
+age educ black hisp  married nodegr log_re74 log_re75
+2
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 1.472e-21}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 1.464e-21}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 1.463e-21}  (not concave)
+convergence not achieved
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     2,163
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATE          {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 13968.14{col 26}{space 2} 2444.091{col 37}{space 1}    5.72{col 46}{space 3}0.000{col 54}{space 4} 9177.806{col 67}{space 3} 18758.47
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 3699.767{col 26}{space 2} 2387.246{col 37}{space 1}    1.55{col 46}{space 3}0.121{col 54}{space 4}-979.1493{col 67}{space 3} 8378.682
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 4.503e-19}  (not concave)
+convergence not achieved
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     2,163
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATET         {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 15629.73{col 26}{space 2} 2476.655{col 37}{space 1}    6.31{col 46}{space 3}0.000{col 54}{space 4} 10775.58{col 67}{space 3} 20483.89
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 3521.064{col 26}{space 2} 2456.419{col 37}{space 1}    1.43{col 46}{space 3}0.152{col 54}{space 4}-1293.428{col 67}{space 3} 8335.556
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75
+2
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 1.388e-22}  (not concave)
+convergence not achieved
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     1,789
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATE          {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 1944.963{col 26}{space 2} 4083.296{col 37}{space 1}    0.48{col 46}{space 3}0.634{col 54}{space 4} -6058.15{col 67}{space 3} 9948.076
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 12519.94{col 26}{space 2} 3904.752{col 37}{space 1}    3.21{col 46}{space 3}0.001{col 54}{space 4} 4866.764{col 67}{space 3} 20173.11
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 8.889e-22}  (not concave)
+convergence not achieved
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     1,789
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATET         {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 3087.622{col 26}{space 2} 4563.719{col 37}{space 1}    0.68{col 46}{space 3}0.499{col 54}{space 4}-5857.103{col 67}{space 3} 12032.35
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 13763.12{col 26}{space 2} 4560.062{col 37}{space 1}    3.02{col 46}{space 3}0.003{col 54}{space 4} 4825.558{col 67}{space 3} 22700.67
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75 age3 black_u74 educ_log_re74
+2
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+convergence not achieved
+{err}convergence not achieved
+{txt}{p 4 4 2}The Gauss-Newton stopping criterion has been met but missing standard errors indicate some of the parameters are not identified.{p_end}
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     1,942
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATE          {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 3208.924{col 26}{space 2}        .{col 37}{space 1}       .{col 46}{space 3}    .{col 54}{space 4}        .{col 67}{space 3}        .
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 12739.73{col 26}{space 2}        .{col 37}{space 1}       .{col 46}{space 3}    .{col 54}{space 4}        .{col 67}{space 3}        .
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+Overlap Assumption Violated
+
+{res}{txt}Iteration 0:{space 3}EE criterion = {res: 2.104e-17}  (not concave)
+Iteration 1:{space 3}EE criterion = {res: 2.104e-17}  (not concave)
+Iteration 2:{space 3}EE criterion = {res: 2.104e-17}  (not concave)
+Iteration 3:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 4:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 5:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 6:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 7:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 8:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 9:{space 3}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 10:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 11:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 12:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 13:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 14:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 15:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 16:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 17:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 18:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 19:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 20:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 21:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 22:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 23:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 24:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 25:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 26:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 27:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 28:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 29:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 30:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 31:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 32:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 33:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 34:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 35:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 36:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 37:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 38:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 39:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 40:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 41:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 42:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 43:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 44:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 45:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 46:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 47:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 48:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 49:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+Iteration 50:{space 2}EE criterion = {res: 2.103e-17}  (not concave)
+convergence not achieved
+{err}convergence not achieved
+{txt}{p 4 4 2}The Gauss-Newton stopping criterion has been met but missing standard errors indicate some of the parameters are not identified.{p_end}
+{res}
+{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}     1,942
+{txt:Estimator}{col 16}:{res: inverse-probability weights}
+{txt:Outcome model}{col 16}:{res: weighted mean}
+{txt:Treatment model}{col 16}:{res: probit}
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}    Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATET         {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 4220.958{col 26}{space 2}        .{col 37}{space 1}       .{col 46}{space 3}    .{col 54}{space 4}        .{col 67}{space 3}        .
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}POmean       {txt}{c |}
+{space 7}treat {c |}
+{space 10}1  {c |}{col 14}{res}{space 2} 14237.62{col 26}{space 2} 309.0848{col 37}{space 1}   46.06{col 46}{space 3}0.000{col 54}{space 4} 13631.82{col 67}{space 3} 14843.41
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Warning: convergence not achieved
+
+{com}. 
+. 
+. *Reg. Impute
+. local base_count = `count' 
+{txt}
+{com}. foreach num of numlist 0 2 {c -(} 
+{txt}  2{com}. local count = `base_count'
+{txt}  3{com}. 
+. foreach cv in a b c {c -(} 
+{txt}  4{com}. di "`covars_`cv''"
+{txt}  5{com}. di "`num'"
+{txt}  6{com}. teffects nnmatch (re78 `covars_`cv'') (treat) if treat ==1 | treat == `num', ate nneighbor(1) metric(maha)
 {txt}  7{com}. local colnmsb: coln e(b)
 {txt}  8{com}. local colnmsv: coln e(V)
 {txt}  9{com}. local colb: word 1 of `colnmsb'
@@ -636,7 +1624,7 @@ Warning: convergence not achieved
 {txt} 13{com}. mat ate`num'[`count',3] = ate`num'[`count',1] - ate`num'[`count',2] * 1.96
 {txt} 14{com}. mat ate`num'[`count',4] = ate`num'[`count',1] + ate`num'[`count',2] * 1.96
 {txt} 15{com}. 
-. teffects ipw (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', atet
+. teffects nnmatch (re78 `covars_`cv'') (treat) if treat ==1 | treat == `num', atet nneighbor(1) metric(maha)
 {txt} 16{com}. local colnmsb: coln e(b)
 {txt} 17{com}. local colnmsv: coln e(V)
 {txt} 18{com}. local colb: word 1 of `colnmsb'
@@ -645,143 +1633,528 @@ Warning: convergence not achieved
 {txt} 21{com}. mat att`num'[`count',2] = _se[`colv']
 {txt} 22{com}. mat att`num'[`count',3] = att`num'[`count',1] - att`num'[`count',2] * 1.96
 {txt} 23{com}. mat att`num'[`count',4] = att`num'[`count',1] + att`num'[`count',2] * 1.96
-{txt} 24{com}. local ++count 
+{txt} 24{com}. 
+. local ++count 
 {txt} 25{com}. {c )-}
 {txt} 26{com}. {c )-}
 age educ black hisp  married nodegr log_re74 log_re75
 0
-
-{res}{txt}Iteration 0:{space 3}EE criterion = {res: 4.582e-18}  
-Iteration 1:{space 3}EE criterion = {res: 7.356e-25}  
 {res}
-{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}       445
-{txt:Estimator}{col 16}:{res: inverse-probability weights}
-{txt:Outcome model}{col 16}:{res: weighted mean}
-{txt:Treatment model}{col 16}:{res: probit}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}       445
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          8
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
+{col 14}{c |}{col 26}   AI Robust
 {col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}ATE          {txt}{c |}
 {space 7}treat {c |}
-{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1539.436{col 26}{space 2} 646.7719{col 37}{space 1}    2.38{col 46}{space 3}0.017{col 54}{space 4} 271.7864{col 67}{space 3} 2807.086
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}POmean       {txt}{c |}
-{space 7}treat {c |}
-{space 10}0  {c |}{col 14}{res}{space 2} 4566.688{col 26}{space 2} 344.9913{col 37}{space 1}   13.24{col 46}{space 3}0.000{col 54}{space 4} 3890.517{col 67}{space 3} 5242.858
+{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1829.796{col 26}{space 2}  779.598{col 37}{space 1}    2.35{col 46}{space 3}0.019{col 54}{space 4} 301.8118{col 67}{space 3}  3357.78
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-
-{res}{txt}Iteration 0:{space 3}EE criterion = {res: 4.582e-18}  
-Iteration 1:{space 3}EE criterion = {res: 8.137e-26}  
 {res}
-{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}       445
-{txt:Estimator}{col 16}:{res: inverse-probability weights}
-{txt:Outcome model}{col 16}:{res: weighted mean}
-{txt:Treatment model}{col 16}:{res: probit}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}       445
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          8
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
+{col 14}{c |}{col 26}   AI Robust
 {col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}ATET         {txt}{c |}
 {space 7}treat {c |}
-{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1765.855{col 26}{space 2} 697.7973{col 37}{space 1}    2.53{col 46}{space 3}0.011{col 54}{space 4}  398.197{col 67}{space 3} 3133.512
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}POmean       {txt}{c |}
-{space 7}treat {c |}
-{space 10}0  {c |}{col 14}{res}{space 2} 4583.289{col 26}{space 2} 391.8777{col 37}{space 1}   11.70{col 46}{space 3}0.000{col 54}{space 4} 3815.223{col 67}{space 3} 5351.355
+{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1558.156{col 26}{space 2} 776.7302{col 37}{space 1}    2.01{col 46}{space 3}0.045{col 54}{space 4} 35.79318{col 67}{space 3} 3080.519
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75
 0
-
-{res}{txt}Iteration 0:{space 3}EE criterion = {res: 1.588e-17}  
-Iteration 1:{space 3}EE criterion = {res: 6.860e-26}  
 {res}
-{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}       445
-{txt:Estimator}{col 16}:{res: inverse-probability weights}
-{txt:Outcome model}{col 16}:{res: weighted mean}
-{txt:Treatment model}{col 16}:{res: probit}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}       445
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          8
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
+{col 14}{c |}{col 26}   AI Robust
 {col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}ATE          {txt}{c |}
 {space 7}treat {c |}
-{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1469.953{col 26}{space 2} 646.4215{col 37}{space 1}    2.27{col 46}{space 3}0.023{col 54}{space 4}   202.99{col 67}{space 3} 2736.916
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}POmean       {txt}{c |}
-{space 7}treat {c |}
-{space 10}0  {c |}{col 14}{res}{space 2} 4576.284{col 26}{space 2} 342.1576{col 37}{space 1}   13.37{col 46}{space 3}0.000{col 54}{space 4} 3905.668{col 67}{space 3} 5246.901
+{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1875.828{col 26}{space 2} 734.9529{col 37}{space 1}    2.55{col 46}{space 3}0.011{col 54}{space 4} 435.3468{col 67}{space 3} 3316.309
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-
-{res}{txt}Iteration 0:{space 3}EE criterion = {res: 1.588e-17}  
-Iteration 1:{space 3}EE criterion = {res: 7.871e-25}  
 {res}
-{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}       445
-{txt:Estimator}{col 16}:{res: inverse-probability weights}
-{txt:Outcome model}{col 16}:{res: weighted mean}
-{txt:Treatment model}{col 16}:{res: probit}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}       445
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          8
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
+{col 14}{c |}{col 26}   AI Robust
 {col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}ATET         {txt}{c |}
 {space 7}treat {c |}
-{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1742.791{col 26}{space 2} 701.0295{col 37}{space 1}    2.49{col 46}{space 3}0.013{col 54}{space 4} 368.7984{col 67}{space 3} 3116.784
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}POmean       {txt}{c |}
-{space 7}treat {c |}
-{space 10}0  {c |}{col 14}{res}{space 2} 4606.352{col 26}{space 2} 393.7657{col 37}{space 1}   11.70{col 46}{space 3}0.000{col 54}{space 4} 3834.586{col 67}{space 3} 5378.119
+{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1731.609{col 26}{space 2} 732.3626{col 37}{space 1}    2.36{col 46}{space 3}0.018{col 54}{space 4} 296.2047{col 67}{space 3} 3167.013
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75 age3 black_u74 educ_log_re74
 0
-
-{res}{txt}Iteration 0:{space 3}EE criterion = {res: 3.001e-25}  
-Iteration 1:{space 3}EE criterion = {res: 1.433e-25}  
 {res}
-{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}       445
-{txt:Estimator}{col 16}:{res: inverse-probability weights}
-{txt:Outcome model}{col 16}:{res: weighted mean}
-{txt:Treatment model}{col 16}:{res: probit}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}       445
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          8
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
+{col 14}{c |}{col 26}   AI Robust
 {col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}ATE          {txt}{c |}
 {space 7}treat {c |}
-{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1467.589{col 26}{space 2} 645.7803{col 37}{space 1}    2.27{col 46}{space 3}0.023{col 54}{space 4} 201.8833{col 67}{space 3} 2733.296
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}POmean       {txt}{c |}
-{space 7}treat {c |}
-{space 10}0  {c |}{col 14}{res}{space 2} 4561.979{col 26}{space 2}  341.542{col 37}{space 1}   13.36{col 46}{space 3}0.000{col 54}{space 4} 3892.569{col 67}{space 3} 5231.389
+{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1671.739{col 26}{space 2}  726.061{col 37}{space 1}    2.30{col 46}{space 3}0.021{col 54}{space 4} 248.6853{col 67}{space 3} 3094.792
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-
-{res}{txt}Iteration 0:{space 3}EE criterion = {res: 4.269e-23}  
-Iteration 1:{space 3}EE criterion = {res: 5.466e-25}  
 {res}
-{txt}Treatment-effects estimation{col 49}Number of obs {col 67}= {res}       445
-{txt:Estimator}{col 16}:{res: inverse-probability weights}
-{txt:Outcome model}{col 16}:{res: weighted mean}
-{txt:Treatment model}{col 16}:{res: probit}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}       445
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          8
 {txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{col 14}{c |}{col 26}    Robust
+{col 14}{c |}{col 26}   AI Robust
 {col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
 {hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 {res}ATET         {txt}{c |}
 {space 7}treat {c |}
-{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1777.066{col 26}{space 2}   700.65{col 37}{space 1}    2.54{col 46}{space 3}0.011{col 54}{space 4} 403.8172{col 67}{space 3} 3150.315
-{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
-{res}POmean       {txt}{c |}
-{space 7}treat {c |}
-{space 10}0  {c |}{col 14}{res}{space 2} 4572.078{col 26}{space 2} 392.4909{col 37}{space 1}   11.65{col 46}{space 3}0.000{col 54}{space 4} 3802.809{col 67}{space 3} 5341.346
+{space 3}(1 vs 0)  {c |}{col 14}{res}{space 2} 1137.425{col 26}{space 2} 813.4366{col 37}{space 1}    1.40{col 46}{space 3}0.162{col 54}{space 4}-456.8812{col 67}{space 3} 2731.732
 {txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 age educ black hisp  married nodegr log_re74 log_re75
 2
-{err}{p}treatment 1 has 512{err} propensity scores less than  1.00e-05{err}{p_end}
-{p}treatment overlap assumption has been violated{err}; use option {helpb teffects_ipw##osample:osample}{err}{bf:()} to identify the overlap violators{p_end}
-{txt}{search r(498), local:r(498);}
-
-end of do-file
-
-{search r(498), local:r(498);}
+{res}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}     2,675
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          4
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}   AI Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATE          {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 15619.49{col 26}{space 2} 1153.316{col 37}{space 1}   13.54{col 46}{space 3}0.000{col 54}{space 4} 13359.03{col 67}{space 3} 17879.95
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}     2,675
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          4
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}   AI Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATET         {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 16904.15{col 26}{space 2} 1217.695{col 37}{space 1}   13.88{col 46}{space 3}0.000{col 54}{space 4} 14517.51{col 67}{space 3} 19290.79
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75
+2
+{res}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}     2,675
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          4
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}   AI Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATE          {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 9349.564{col 26}{space 2}  3974.77{col 37}{space 1}    2.35{col 46}{space 3}0.019{col 54}{space 4} 1559.158{col 67}{space 3} 17139.97
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}     2,675
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          4
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}   AI Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATET         {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 10196.02{col 26}{space 2} 4254.946{col 37}{space 1}    2.40{col 46}{space 3}0.017{col 54}{space 4} 1856.484{col 67}{space 3} 18535.57
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75 age3 black_u74 educ_log_re74
+2
+{res}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}     2,675
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          4
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}   AI Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATE          {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 9561.966{col 26}{space 2} 4033.541{col 37}{space 1}    2.37{col 46}{space 3}0.018{col 54}{space 4}  1656.37{col 67}{space 3} 17467.56
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{txt}Treatment-effects estimation{col 48}Number of obs {col 67}= {res}     2,675
+{txt:Estimator}{col 16}:{res: nearest-neighbor matching}{col 48}{txt:Matches: requested }{col 67}{txt:=}          1
+{txt:Outcome model}{col 16}:{res: matching}{txt}{col 63}min {col 67}= {res}         1
+{txt:Distance metric: }{res:Mahalanobis}{col 63}{txt:max }{col 67}{txt:=}          4
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}   AI Robust
+{col 1}        re78{col 14}{c |}      Coef.{col 26}   Std. Err.{col 38}      z{col 46}   P>|z|{col 54}     [95% Con{col 67}f. Interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}ATET         {txt}{c |}
+{space 7}treat {c |}
+{space 3}(2 vs 1)  {c |}{col 14}{res}{space 2} 10421.27{col 26}{space 2} 4318.452{col 37}{space 1}    2.41{col 46}{space 3}0.016{col 54}{space 4}  1957.26{col 67}{space 3} 18885.28
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
 
 {com}. 
+. *PS Matching 
+. local base_count = `count' 
+{txt}
+{com}. foreach num of numlist 0 2 {c -(} 
+{txt}  2{com}. local count = `base_count'
+{txt}  3{com}. 
+. foreach cv in a b c {c -(} 
+{txt}  4{com}. di "`covars_`cv''"
+{txt}  5{com}. di "`num'"
+{txt}  6{com}. capture teffects psmatch (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', ate osample(otest) iter(50)
+{txt}  7{com}.  if _rc==498 {c -(}
+{txt}  8{com}.                display "Overlap Assumption Violated"
+{txt}  9{com}.                            teffects psmatch (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, ate iter(50)
+{txt} 10{com}. {c )-}
+{txt} 11{com}. cap drop otest
+{txt} 12{com}. local colnmsb: coln e(b)
+{txt} 13{com}. local colnmsv: coln e(V)
+{txt} 14{com}. local colb: word 1 of `colnmsb'
+{txt} 15{com}. local colv: word 1 of `colnmsv'
+{txt} 16{com}. mat ate`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+{txt} 17{com}. mat ate`num'[`count',2] = _se[`colv']
+{txt} 18{com}. mat ate`num'[`count',3] = ate`num'[`count',1] - ate`num'[`count',2] * 1.96
+{txt} 19{com}. mat ate`num'[`count',4] = ate`num'[`count',1] + ate`num'[`count',2] * 1.96
+{txt} 20{com}. 
+. capture teffects psmatch (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', atet osample(otest) iter(50)
+{txt} 21{com}.  if _rc==498 {c -(}
+{txt} 22{com}.                display "Overlap Assumption Violated"
+{txt} 23{com}.                             teffects psmatch (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, atet iter(50)
+{txt} 24{com}. {c )-}
+{txt} 25{com}. cap drop otest
+{txt} 26{com}. local colnmsb: coln e(b)
+{txt} 27{com}. local colnmsv: coln e(V)
+{txt} 28{com}. local colb: word 1 of `colnmsb'
+{txt} 29{com}. local colv: word 1 of `colnmsv'
+{txt} 30{com}. mat att`num'[`count',1] = _b[`colb'] * (1 - `num') // stata thinks 2 is treatment
+{txt} 31{com}. mat att`num'[`count',2] = _se[`colv']
+{txt} 32{com}. mat att`num'[`count',3] = att`num'[`count',1] - att`num'[`count',2] * 1.96
+{txt} 33{com}. mat att`num'[`count',4] = att`num'[`count',1] + att`num'[`count',2] * 1.96
+{txt} 34{com}. 
+. 
+. local ++count 
+{txt} 35{com}. {c )-}
+{txt} 36{com}. {c )-}
+age educ black hisp  married nodegr log_re74 log_re75
+0
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75
+0
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75 age3 black_u74 educ_log_re74
+0
+age educ black hisp  married nodegr log_re74 log_re75
+2
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75
+2
+age educ black hisp  married nodegr log_re74 log_re75 age2 educ2 u74 u75 age3 black_u74 educ_log_re74
+2
+{txt}
+{com}. 
+. 
+. 
+. mat li ate0
+{res}
+{txt}ate0[19,4]
+            c1         c2         c3         c4
+ r1 {res} 1794.3424  670.99654  479.18915  3109.4956
+{txt} r2 {res} 1582.1667   659.2457  290.04507  2874.2882
+{txt} r3 {res} 1506.9012  657.31475  218.56428  2795.2381
+{txt} r4 {res} 1501.3732  662.43532  202.99999  2799.7464
+{txt} r5 {res} 1462.2693  642.24087   203.4772  2721.0614
+{txt} r6 {res} 1454.1282  643.48562  192.89638    2715.36
+{txt} r7 {res} 1427.5263  642.95044  167.34339  2687.7091
+{txt} r8 {res} 1539.4361  646.77192  271.76309   2807.109
+{txt} r9 {res} 1469.9528  646.42147  202.96668  2736.9388
+{txt}r10 {res} 1467.5895  645.78035     201.86   2733.319
+{txt}r11 {res} 1539.4361  646.77192  271.76309   2807.109
+{txt}r12 {res} 1469.9528  646.42147  202.96668  2736.9388
+{txt}r13 {res} 1467.5895  645.78026  201.86016  2733.3188
+{txt}r14 {res} 1829.7958  779.59802  301.78369  3357.8079
+{txt}r15 {res} 1875.8281  734.95291  435.32036  3316.3358
+{txt}r16 {res} 1671.7386  726.06099   248.6591  3094.8182
+{txt}r17 {res}  10421.27  4318.4516  1957.1047  18885.435
+{txt}r18 {res}  10421.27  4318.4516  1957.1047  18885.435
+{txt}r19 {res}  10421.27  4318.4516  1957.1047  18885.435
+{reset}
+{com}. mat li ate2
+{res}
+{txt}ate2[19,4]
+             c1          c2          c3          c4
+ r1 {res} -15204.777   657.07631  -16492.647  -13916.908
+{txt} r2 {res}  6302.3954   1212.4566   3925.9805   8678.8104
+{txt} r3 {res}   4699.259   1031.6669   2677.1918   6721.3262
+{txt} r4 {res}   4284.342   1037.3931   2251.0516   6317.6324
+{txt} r5 {res} -11195.037   1741.3261  -14608.036  -7782.0374
+{txt} r6 {res}  -10398.22   3293.3996  -16853.283  -3943.1565
+{txt} r7 {res}  -11920.18    3834.631  -19436.057  -4404.3033
+{txt} r8 {res} -13968.137   2444.0913  -18758.556  -9177.7182
+{txt} r9 {res} -1944.9632    4083.296  -9948.2234   6058.2971
+{txt}r10 {res} -3208.9238           0  -3208.9238  -3208.9238
+{txt}r11 {res} -13968.137   2444.0913  -18758.556  -9177.7182
+{txt}r12 {res} -1944.9632    4083.296  -9948.2234   6058.2971
+{txt}r13 {res} -3208.9238           0  -3208.9238  -3208.9238
+{txt}r14 {res}  -15619.49   1153.3158  -17879.989  -13358.991
+{txt}r15 {res}  -9349.564   3974.7701  -17140.113  -1559.0146
+{txt}r16 {res} -9561.9662   4033.5414  -17467.707   -1656.225
+{txt}r17 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{txt}r18 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{txt}r19 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{reset}
+{com}. 
+. mat li att0
+{res}
+{txt}att0[19,4]
+             c1          c2          c3          c4
+ r1 {res}  1794.3424   670.99654   479.18915   3109.4956
+{txt} r2 {res}  1582.1667    659.2457   290.04507   2874.2882
+{txt} r3 {res}  1506.9012   657.31475   218.56428   2795.2381
+{txt} r4 {res}  1501.3732   662.43532   202.99999   2799.7464
+{txt} r5 {res}  1726.6021   688.76383   376.62496   3076.5792
+{txt} r6 {res}  1809.6967   693.86739   449.71661   3169.6768
+{txt} r7 {res}  1844.6059    694.8217   482.75536   3206.4564
+{txt} r8 {res}  1765.8546   697.79731    398.1719   3133.5374
+{txt} r9 {res}  1742.7911   701.02955   368.77316    3116.809
+{txt}r10 {res}   1777.066      700.65   403.79198     3150.34
+{txt}r11 {res}  1765.8546   697.79731    398.1719   3133.5374
+{txt}r12 {res}  1742.7911   701.02954   368.77317    3116.809
+{txt}r13 {res}   1777.066   700.64988   403.79221   3150.3397
+{txt}r14 {res}  1558.1563   776.73016   35.765204   3080.5474
+{txt}r15 {res}  1731.6091   732.36262   296.17836   3167.0398
+{txt}r16 {res}  1137.4252   813.43663  -456.91054    2731.761
+{txt}r17 {res}   10421.27   4318.4516   1957.1047   18885.435
+{txt}r18 {res}   10421.27   4318.4516   1957.1047   18885.435
+{txt}r19 {res}   10421.27   4318.4516   1957.1047   18885.435
+{reset}
+{com}. mat li att2
+{res}
+{txt}att2[19,4]
+             c1          c2          c3          c4
+ r1 {res} -15204.777   657.07631  -16492.647  -13916.908
+{txt} r2 {res}  6302.3954   1212.4566   3925.9805   8678.8104
+{txt} r3 {res}   4699.259   1031.6669   2677.1918   6721.3262
+{txt} r4 {res}   4284.342   1037.3931   2251.0516   6317.6324
+{txt} r5 {res} -12661.529   1852.7548  -16292.929  -9030.1299
+{txt} r6 {res} -11537.261   3539.2681  -18474.226   -4600.295
+{txt} r7 {res} -13218.766   4119.5046  -21292.995  -5144.5369
+{txt} r8 {res} -15629.734   2476.6552  -20483.978  -10775.489
+{txt} r9 {res} -3087.6217   4563.7189  -12032.511   5857.2673
+{txt}r10 {res} -4220.9578           0  -4220.9578  -4220.9578
+{txt}r11 {res} -15629.734   2476.6552  -20483.978  -10775.489
+{txt}r12 {res} -3087.6217   4563.7189  -12032.511   5857.2673
+{txt}r13 {res} -4220.9578           0  -4220.9578  -4220.9578
+{txt}r14 {res}  -16904.15   1217.6947  -19290.831  -14517.468
+{txt}r15 {res} -10196.024   4254.9459  -18535.718  -1856.3305
+{txt}r16 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{txt}r17 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{txt}r18 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{txt}r19 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{reset}
+{com}. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. 
+. ****
+. * Question 3
+. ****
+. /*
+> clear all
+> set seed 12345 
+> 
+> *construct dgp variance covariance matrix 
+> matrix P = (1,.85 \.85, 1)
+> mat A = cholesky(P)
+> 
+> program modelsim, rclass
+>         args A
+>         drop _all 
+>         set obs 50
+> 
+>         *generate component normal variables 
+>         gen c1= invnorm(uniform())
+>         gen c2= invnorm(uniform())
+> 
+>         *use cholesky decomp to back out x,z 
+>         gen x = `A'[1,1] * c1 + `A'[1,2] * c2
+>         gen z = `A'[2,1] * c1 + `A'[2,2] * c2
+> 
+>         *general epsilon and outcome variable 
+>         gen e= invnorm(uniform())
+>         gen y = 0.5*x + z + e 
+> 
+> 
+>         *simulate model selection process (flip order of regs for speed) 
+>         reg y x 
+>         scalar beta_tilde = _b[x]
+>         
+>         reg y x z 
+>         scalar beta_hat = _b[x]
+> 
+> 
+>         if abs(_b[z]/_se[z])>=1.96 {c -(}
+>                 scalar beta_check = beta_hat
+>         {c )-}
+>         else{c -(}
+>                 scalar beta_check = beta_tilde
+>         {c )-}
+>         
+> end
+> 
+> simulate beta_hat = beta_hat beta_check=beta_check beta_tilde=beta_tilde, ///
+> seed(1234) reps(1000): modelsim A
+> 
+> **TODO: empircal coverage rate 
+> 
+> **
+> 
+> sum * 
+> estpost summarize *
+> estout using hw4_q3_1_stata.tex, cells("mean sd min max") style(tex)  replace
+> 
+> kdensity beta_hat, normal name(beta_hat,replace)
+> gr export hw4_q3_bhat_stata.png ,replace
+> kdensity beta_check, normal name(beta_check,replace)
+> gr export hw4_q3_bcheck_stata.png ,replace
+> kdensity beta_tilde,normal name(beta_tilde,replace)
+> gr export hw4_q3_btilde_stata.png ,replace
+> 
+> sum beta_hat
+> gen cov_upper = r(mean) + 1.96*r(sd)/sqrt(50)
+> gen cov_lower = r(mean) - 1.96*r(sd)/sqrt(50)
+> gen covrate_hat =  cond(beta_hat<= cov_upper & beta_hat>= cov_lower,1,0)
+> gen covrate_tilde =  cond(beta_tilde<= cov_upper & beta_tilde>= cov_lower,1,0)
+> gen covrate_check  = cond(beta_check<= cov_upper & beta_check>= cov_lower,1,0)
+> sum covrate*
+> estout using hw4_q3_2_stata.tex, cells("mean ") style(tex)  replace
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+> cap log close
+
+{txt}end of do-file
+
+{com}. 
+. mat li ate0
+{res}
+{txt}ate0[19,4]
+            c1         c2         c3         c4
+ r1 {res} 1794.3424  670.99654  479.18915  3109.4956
+{txt} r2 {res} 1582.1667   659.2457  290.04507  2874.2882
+{txt} r3 {res} 1506.9012  657.31475  218.56428  2795.2381
+{txt} r4 {res} 1501.3732  662.43532  202.99999  2799.7464
+{txt} r5 {res} 1462.2693  642.24087   203.4772  2721.0614
+{txt} r6 {res} 1454.1282  643.48562  192.89638    2715.36
+{txt} r7 {res} 1427.5263  642.95044  167.34339  2687.7091
+{txt} r8 {res} 1539.4361  646.77192  271.76309   2807.109
+{txt} r9 {res} 1469.9528  646.42147  202.96668  2736.9388
+{txt}r10 {res} 1467.5895  645.78035     201.86   2733.319
+{txt}r11 {res} 1539.4361  646.77192  271.76309   2807.109
+{txt}r12 {res} 1469.9528  646.42147  202.96668  2736.9388
+{txt}r13 {res} 1467.5895  645.78026  201.86016  2733.3188
+{txt}r14 {res} 1829.7958  779.59802  301.78369  3357.8079
+{txt}r15 {res} 1875.8281  734.95291  435.32036  3316.3358
+{txt}r16 {res} 1671.7386  726.06099   248.6591  3094.8182
+{txt}r17 {res}  10421.27  4318.4516  1957.1047  18885.435
+{txt}r18 {res}  10421.27  4318.4516  1957.1047  18885.435
+{txt}r19 {res}  10421.27  4318.4516  1957.1047  18885.435
+{reset}
+{com}. mat li ate2
+{res}
+{txt}ate2[19,4]
+             c1          c2          c3          c4
+ r1 {res} -15204.777   657.07631  -16492.647  -13916.908
+{txt} r2 {res}  6302.3954   1212.4566   3925.9805   8678.8104
+{txt} r3 {res}   4699.259   1031.6669   2677.1918   6721.3262
+{txt} r4 {res}   4284.342   1037.3931   2251.0516   6317.6324
+{txt} r5 {res} -11195.037   1741.3261  -14608.036  -7782.0374
+{txt} r6 {res}  -10398.22   3293.3996  -16853.283  -3943.1565
+{txt} r7 {res}  -11920.18    3834.631  -19436.057  -4404.3033
+{txt} r8 {res} -13968.137   2444.0913  -18758.556  -9177.7182
+{txt} r9 {res} -1944.9632    4083.296  -9948.2234   6058.2971
+{txt}r10 {res} -3208.9238           0  -3208.9238  -3208.9238
+{txt}r11 {res} -13968.137   2444.0913  -18758.556  -9177.7182
+{txt}r12 {res} -1944.9632    4083.296  -9948.2234   6058.2971
+{txt}r13 {res} -3208.9238           0  -3208.9238  -3208.9238
+{txt}r14 {res}  -15619.49   1153.3158  -17879.989  -13358.991
+{txt}r15 {res}  -9349.564   3974.7701  -17140.113  -1559.0146
+{txt}r16 {res} -9561.9662   4033.5414  -17467.707   -1656.225
+{txt}r17 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{txt}r18 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{txt}r19 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{reset}
+{com}. 
+. mat li att0
+{res}
+{txt}att0[19,4]
+             c1          c2          c3          c4
+ r1 {res}  1794.3424   670.99654   479.18915   3109.4956
+{txt} r2 {res}  1582.1667    659.2457   290.04507   2874.2882
+{txt} r3 {res}  1506.9012   657.31475   218.56428   2795.2381
+{txt} r4 {res}  1501.3732   662.43532   202.99999   2799.7464
+{txt} r5 {res}  1726.6021   688.76383   376.62496   3076.5792
+{txt} r6 {res}  1809.6967   693.86739   449.71661   3169.6768
+{txt} r7 {res}  1844.6059    694.8217   482.75536   3206.4564
+{txt} r8 {res}  1765.8546   697.79731    398.1719   3133.5374
+{txt} r9 {res}  1742.7911   701.02955   368.77316    3116.809
+{txt}r10 {res}   1777.066      700.65   403.79198     3150.34
+{txt}r11 {res}  1765.8546   697.79731    398.1719   3133.5374
+{txt}r12 {res}  1742.7911   701.02954   368.77317    3116.809
+{txt}r13 {res}   1777.066   700.64988   403.79221   3150.3397
+{txt}r14 {res}  1558.1563   776.73016   35.765204   3080.5474
+{txt}r15 {res}  1731.6091   732.36262   296.17836   3167.0398
+{txt}r16 {res}  1137.4252   813.43663  -456.91054    2731.761
+{txt}r17 {res}   10421.27   4318.4516   1957.1047   18885.435
+{txt}r18 {res}   10421.27   4318.4516   1957.1047   18885.435
+{txt}r19 {res}   10421.27   4318.4516   1957.1047   18885.435
+{reset}
+{com}. mat li att2
+{res}
+{txt}att2[19,4]
+             c1          c2          c3          c4
+ r1 {res} -15204.777   657.07631  -16492.647  -13916.908
+{txt} r2 {res}  6302.3954   1212.4566   3925.9805   8678.8104
+{txt} r3 {res}   4699.259   1031.6669   2677.1918   6721.3262
+{txt} r4 {res}   4284.342   1037.3931   2251.0516   6317.6324
+{txt} r5 {res} -12661.529   1852.7548  -16292.929  -9030.1299
+{txt} r6 {res} -11537.261   3539.2681  -18474.226   -4600.295
+{txt} r7 {res} -13218.766   4119.5046  -21292.995  -5144.5369
+{txt} r8 {res} -15629.734   2476.6552  -20483.978  -10775.489
+{txt} r9 {res} -3087.6217   4563.7189  -12032.511   5857.2673
+{txt}r10 {res} -4220.9578           0  -4220.9578  -4220.9578
+{txt}r11 {res} -15629.734   2476.6552  -20483.978  -10775.489
+{txt}r12 {res} -3087.6217   4563.7189  -12032.511   5857.2673
+{txt}r13 {res} -4220.9578           0  -4220.9578  -4220.9578
+{txt}r14 {res}  -16904.15   1217.6947  -19290.831  -14517.468
+{txt}r15 {res} -10196.024   4254.9459  -18535.718  -1856.3305
+{txt}r16 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{txt}r17 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{txt}r18 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{txt}r19 {res}  -10421.27   4318.4516  -18885.435  -1957.1047
+{reset}
+{com}. 
+. 
