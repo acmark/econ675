@@ -11,10 +11,6 @@ cd $dir
 cap log close
 log using $resdir\pset4_stata.smcl, replace
 
-****
-* Question 1
-****
-
 
 ****
 * Question 2
@@ -138,10 +134,10 @@ local count = `base_count'
 foreach cv in a b c { 
 di "`covars_`cv''"
 di "`num'"
-capture teffects ipw (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', ate osample(otest) iter(50)
+capture teffects ipw (re78) (treat `covars_`cv'', logit) if treat ==1 | treat == `num', ate osample(otest) iter(500)
  if _rc==498 {
                display "Overlap Assumption Violated"
-			   teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, ate iter(50)
+			   teffects ipw (re78) (treat `covars_`cv'', logit) if (treat ==1 | treat == `num') & otest ==0, ate iter(500)
 }
 drop otest
 local colnmsb: coln e(b)
@@ -153,10 +149,10 @@ mat ate`num'[`count',2] = _se[`colv']
 mat ate`num'[`count',3] = ate`num'[`count',1] - ate`num'[`count',2] * 1.96
 mat ate`num'[`count',4] = ate`num'[`count',1] + ate`num'[`count',2] * 1.96
 
-capture teffects ipw (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', atet osample(otest) iter(50)
+capture teffects ipw (re78) (treat `covars_`cv'', logit) if treat ==1 | treat == `num', atet osample(otest) iter(500)
  if _rc==498 {
                display "Overlap Assumption Violated"
-			    teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, atet iter(50)
+			    teffects ipw (re78) (treat `covars_`cv'', logit) if (treat ==1 | treat == `num') & otest ==0, atet iter(500)
 }
 drop otest
 local colnmsb: coln e(b)
@@ -182,10 +178,10 @@ local count = `base_count'
 foreach cv in a b c { 
 di "`covars_`cv''"
 di "`num'"
-capture teffects ipwra (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', ate osample(otest) iter(50)
+capture teffects ipwra (re78) (treat `covars_`cv'', logit) if treat ==1 | treat == `num', ate osample(otest) iter(500)
  if _rc==498 {
                display "Overlap Assumption Violated"
-			   teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, ate iter(50)
+			   teffects ipw (re78) (treat `covars_`cv'', logit) if (treat ==1 | treat == `num') & otest ==0, ate iter(500)
 }
 drop otest
 local colnmsb: coln e(b)
@@ -197,10 +193,10 @@ mat ate`num'[`count',2] = _se[`colv']
 mat ate`num'[`count',3] = ate`num'[`count',1] - ate`num'[`count',2] * 1.96
 mat ate`num'[`count',4] = ate`num'[`count',1] + ate`num'[`count',2] * 1.96
 
-capture teffects ipwra (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', atet osample(otest) iter(50)
+capture teffects ipwra (re78) (treat `covars_`cv'', logit) if treat ==1 | treat == `num', atet osample(otest) iter(500)
  if _rc==498 {
                display "Overlap Assumption Violated"
-			    teffects ipw (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, atet iter(50)
+			    teffects ipw (re78) (treat `covars_`cv'', logit) if (treat ==1 | treat == `num') & otest ==0, atet iter(500)
 }
 drop otest
 local colnmsb: coln e(b)
@@ -258,10 +254,10 @@ local count = `base_count'
 foreach cv in a b c { 
 di "`covars_`cv''"
 di "`num'"
-capture teffects psmatch (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', ate osample(otest) iter(50)
+capture teffects psmatch (re78) (treat `covars_`cv'', logit) if treat ==1 | treat == `num', ate osample(otest) iter(500)
  if _rc==498 {
                display "Overlap Assumption Violated"
-			   teffects psmatch (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, ate iter(50)
+			   teffects psmatch (re78) (treat `covars_`cv'', logit) if (treat ==1 | treat == `num') & otest ==0, ate iter(500)
 }
 cap drop otest
 local colnmsb: coln e(b)
@@ -273,10 +269,10 @@ mat ate`num'[`count',2] = _se[`colv']
 mat ate`num'[`count',3] = ate`num'[`count',1] - ate`num'[`count',2] * 1.96
 mat ate`num'[`count',4] = ate`num'[`count',1] + ate`num'[`count',2] * 1.96
 
-capture teffects psmatch (re78) (treat `covars_`cv'', probit) if treat ==1 | treat == `num', atet osample(otest) iter(50)
+capture teffects psmatch (re78) (treat `covars_`cv'', logit) if treat ==1 | treat == `num', atet osample(otest) iter(500)
  if _rc==498 {
                display "Overlap Assumption Violated"
-			    teffects psmatch (re78) (treat `covars_`cv'', probit) if (treat ==1 | treat == `num') & otest ==0, atet iter(50)
+			    teffects psmatch (re78) (treat `covars_`cv'', logit) if (treat ==1 | treat == `num') & otest ==0, atet iter(500)
 }
 cap drop otest
 local colnmsb: coln e(b)
@@ -308,7 +304,7 @@ mat li att2
 ****
 * Question 3
 ****
-/*
+
 clear all
 set seed 12345 
 
@@ -370,11 +366,20 @@ kdensity beta_tilde,normal name(beta_tilde,replace)
 gr export hw4_q3_btilde_stata.png ,replace
 
 sum beta_hat
-gen cov_upper = r(mean) + 1.96*r(sd)/sqrt(50)
-gen cov_lower = r(mean) - 1.96*r(sd)/sqrt(50)
-gen covrate_hat =  cond(beta_hat<= cov_upper & beta_hat>= cov_lower,1,0)
-gen covrate_tilde =  cond(beta_tilde<= cov_upper & beta_tilde>= cov_lower,1,0)
-gen covrate_check  = cond(beta_check<= cov_upper & beta_check>= cov_lower,1,0)
+gen cov_uppers_hat = beta_hat + 1.96*r(sd)/sqrt(50)
+gen cov_lowers_hat = beta_hat - 1.96*r(sd)/sqrt(50)
+gen covrate_hat =  cond(0.5<= cov_uppers_hat & 0.5>= cov_lowers_hat,1,0)
+
+sum beta_tilde
+gen cov_uppers_tilde = beta_tilde + 1.96*r(sd)/sqrt(50)
+gen cov_lowers_tilde = beta_tilde - 1.96*r(sd)/sqrt(50)
+gen covrate_tilde =  cond(0.5<= cov_uppers_tilde & 0.5>= cov_lowers_tilde,1,0)
+
+sum beta_check
+gen cov_uppers_check = beta_check + 1.96*r(sd)/sqrt(50)
+gen cov_lowers_check = beta_check - 1.96*r(sd)/sqrt(50)
+gen covrate_check =  cond(0.5<= cov_uppers_check & 0.5>= cov_lowers_check,1,0)
+
 sum covrate*
 estout using hw4_q3_2_stata.tex, cells("mean ") style(tex)  replace
 
