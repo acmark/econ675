@@ -1,0 +1,41 @@
+%latex.default(round(tableATEq, 2), file = paste0("teffectsATEq.txt"),     append = FALSE, table.env = FALSE, center = "none", title = "",     n.cgroup = c(4, 4), cgroup = c("Experimental Data", "PSID Control"),     colheads = c("$\\hat{\\tau}$", "s.e.", "C.I.", "", "$\\hat{\\tau}$",         "s.e.", "C.I.", ""), n.rgroup = c(1, rep(3, 6)), rgroup = c("Mean Diff.",         "OLS", "Reg. Impute", "IPW", "D. Robust", "N1 Match",         "p Match"), rowname = c("", rep(c("a", "b", "c"), 8)))%
+\begin{tabular}{lrrrrcrrrr}
+\hline\hline
+\multicolumn{1}{l}{\bfseries }&\multicolumn{4}{c}{\bfseries Experimental Data}&\multicolumn{1}{c}{\bfseries }&\multicolumn{4}{c}{\bfseries PSID Control}\tabularnewline
+\cline{2-5} \cline{7-10}
+\multicolumn{1}{l}{}&\multicolumn{1}{c}{$\hat{\tau}$}&\multicolumn{1}{c}{s.e.}&\multicolumn{1}{c}{C.I.}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{}&\multicolumn{1}{c}{$\hat{\tau}$}&\multicolumn{1}{c}{s.e.}&\multicolumn{1}{c}{C.I.}&\multicolumn{1}{c}{}\tabularnewline
+\hline
+{\bfseries Mean Diff.}&&&&&&&&&\tabularnewline
+~~&$1794.34$&$670.82$&$479.53$&$3109.16$&&$-15204.78$&$  655.91$&$-16490.37$&$-13919.19$\tabularnewline
+\hline
+{\bfseries OLS}&&&&&&&&&\tabularnewline
+~~a&$1582.17$&$658.74$&$291.04$&$2873.30$&&$  6302.40$&$ 1209.32$&$  3932.13$&$  8672.66$\tabularnewline
+~~b&$1506.90$&$657.12$&$218.95$&$2794.85$&&$  4699.26$&$ 1027.12$&$  2686.11$&$  6712.41$\tabularnewline
+~~c&$1501.37$&$662.91$&$202.07$&$2800.68$&&$  4284.34$&$ 1031.34$&$  2262.91$&$  6305.77$\tabularnewline
+\hline
+{\bfseries Reg. Impute}&&&&&&&&&\tabularnewline
+~~a&$1462.27$&$629.75$&$227.97$&$2696.57$&&$-11195.04$&$ 1741.33$&$-14608.04$&$ -7782.04$\tabularnewline
+~~b&$1454.13$&$630.67$&$218.02$&$2690.24$&&$-10398.22$&$ 3549.31$&$-17354.86$&$ -3441.58$\tabularnewline
+~~c&$1427.53$&$641.70$&$169.80$&$2685.26$&&$-11920.18$&$ 3497.68$&$-18775.64$&$ -5064.72$\tabularnewline
+\hline
+{\bfseries IPW}&&&&&&&&&\tabularnewline
+~~a&$1537.40$&$629.76$&$303.07$&$2771.72$&&$-13507.18$&$ 2800.20$&$-18995.57$&$ -8018.79$\tabularnewline
+~~b&$1469.62$&$630.67$&$233.51$&$2705.72$&&$ -7246.13$&$ 3549.83$&$-14203.79$&$  -288.46$\tabularnewline
+~~c&$1468.10$&$641.70$&$210.37$&$2725.84$&&$ -7486.53$&$ 3498.73$&$-14344.05$&$  -629.01$\tabularnewline
+\hline
+{\bfseries D. Robust}&&&&&&&&&\tabularnewline
+~~a&$1473.17$&$629.75$&$238.87$&$2707.48$&&$-13507.18$&$ 2800.20$&$-18995.57$&$ -8018.79$\tabularnewline
+~~b&$1451.05$&$630.67$&$214.95$&$2687.16$&&$-11419.47$&$ 3549.36$&$-18376.22$&$ -4462.72$\tabularnewline
+~~c&$1423.88$&$641.70$&$166.15$&$2681.61$&&$-12504.50$&$ 3497.70$&$-19359.99$&$ -5649.00$\tabularnewline
+\hline
+{\bfseries N1 Match}&&&&&&&&&\tabularnewline
+~~a&$1829.80$&$779.60$&$301.78$&$3357.81$&&$-15619.49$&$ 1153.32$&$-17879.99$&$-13358.99$\tabularnewline
+~~b&$1875.83$&$734.95$&$435.32$&$3316.34$&&$ -9349.56$&$ 3974.77$&$-17140.11$&$ -1559.01$\tabularnewline
+~~c&$1671.74$&$726.06$&$248.66$&$3094.82$&&$ -9561.97$&$ 4033.54$&$-17467.71$&$ -1656.23$\tabularnewline
+\hline
+{\bfseries p Match}&&&&&&&&&\tabularnewline
+~~a&$1541.57$&$646.32$&$274.79$&$2808.35$&&$-15858.78$&$ 6749.93$&$-29088.64$&$ -2628.92$\tabularnewline
+~~b&$1488.63$&$765.40$&$-11.56$&$2988.83$&&$  8646.26$&$15055.98$&$-20863.46$&$ 38155.98$\tabularnewline
+~~c&$1256.81$&$677.13$&$-70.37$&$2583.98$&&$ -9561.97$&$ 4033.54$&$-17467.71$&$ -1656.23$\tabularnewline
+\hline
+\end{tabular}
